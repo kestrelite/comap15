@@ -3,7 +3,7 @@
 %  Populates an initial probability matrix P0 based on:
 %  flightpath
 
-cells=101;
+cells=11;
 %Set cells to the amount of cells per side of probability distribution
 
 P0=zeros(cells,cells);
@@ -26,8 +26,9 @@ end
 
 planeAlpha = 0.3;
 trialsMat = zeros(cells);
+trialsMat(6,6) = 1;
 
-epsilonMat = P0 * planeAlpha * ((1 - planeAlpha).^trialsMat);
+epsilonMat = P0 .* ((1 - planeAlpha).^trialsMat) * planeAlpha;
 epsilonMat;
 %P0
     
