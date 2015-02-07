@@ -90,11 +90,15 @@ For instance, one may include a distance parameter in the cost of the function, 
 
 In the event that the model does not find an object in cell $k$, the probability distribution must be modified to match. This modification, discussed in Bayesian search theory, occurs as follows. Let $T$ represent the probability that the plane is in the cell, and $F$ the probability that it is found. Then: 
 $$P(T|F)=\frac{P(T)P(F|T)}{P(F)}$$ 
-$$P(T|\sim F)=\frac{p(k)[1-\beta_t(j,k)]}{(p(k)[1-\beta_t(k,j)]+(1-p(k)}$$
-$$P(\sim T|\sim F)=1-P(T|\sim F)$$
-$$P(\sim T|\sim F)=\frac{1-p(k)}{1-p(k)\beta_t(k,j)}$$
+$$P(T|\sim F)=\frac{p(k)[1-\beta_t(j,k)]}{(p(k)[1-\beta_t(k,j)]+(1-p(k))}$$
 
-% https://mathcrumbs.wordpress.com/2012/12/25/working-out-a-part-of-the-bayesian-search-theory-equation/
+Thus, the posterior probability that it is there but was not found is: $$p'(k)=p(k)\frac{1-\beta_t(j,k)}{1-\beta_t(k,j)p(k)}$$.
+
+The posterior probability of every other square can be similarly adjusted (though its proof is omitted): $$p'(k)=p(k)\frac{1}{1-p(k)\beta_t(j,k)}$$
+
+(The notation here may be confusing. For clarification, the first $p'(k)$ adjustment applies only to the square that was searched; the second applies to every other square.)
+
+After a failed search, the probability of the plane being in cell $k$ becomes this probability.
 
 \subsection{Executing the Search Method}
 
@@ -119,6 +123,4 @@ The presence of debris at cell $j$ is $d_j\in \{0,1\}$. It is assumed that there
 Repeated application of $\mathtt{T}$ over each cell $d_j$ will create the new positional distribution informed by debris, $p_w$. This is created by: $$p_w=\mathtt{T}(d_1, \mathtt{T}(d_2, \ldots \mathtt{T}(d_j, p_n)\ldots))$$
 
 \end{multicols}
-
-
 \end{document}
