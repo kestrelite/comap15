@@ -1,10 +1,6 @@
 *.log
-*.pdf
 *.gz
 *.aux
-*.log
-*.gz
+*.synctex.gz
 /JavaTest/nbproject/private/
 /JavaTest/build/
-*.gz
-*.log

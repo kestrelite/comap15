@@ -63,30 +63,7 @@ A model for optimal discrete-time search and rescue in in water is presented. Th
 
 The model is partitioned into two separate searches. First, a visual aerial search is performed for floating debris, and locations of debris are indexed. A transformation is applied to convert positional data of debris into a probable area of the plane crash. An existing model for the oceanic currents of the region is presumed to already to exist. This model is used to predict the location of crash debris as a probability distribution. This positional prediction data is combined with data from the ocean current model in order to create a more localized search area of the wreckage on the sea floor. A second underwater search, informed by the aerial search, is then conducted via underwater vehicles utilizing sonar.
 
-\section{Assumptions}
-
-Assumptions may be broken into three categories: general assumptions, assumptions used for the aerial search, and assumptions used for the underwater search. A note that an assumption ``is extensible'' is used to indicate that the removal of the assumption from the model does not significantly complicate the mathematics used.
-
-\subsection{General Assumptions}
-
-\begin{itemize}
-\item Only one search occurs in a cell at a given time. This assumption is extensible.
-\item When computing distances, each cell size is small enough to approximate Euclidean distance.
-\end{itemize}
-
-\subsection{Aerial Search Assumptions}
-
-\begin{itemize}
-\item An accurate model regarding ocean currents' ability to shift objects exists that is suitable for use in conjunction with this model. Such a current model would need to be able to advance forward in continuous-time or small discrete-time steps, as the probability distribution of debris will change vastly both over time and number of searches.
-\item Debris is either present or not present. Various types of debris and their individual implications are not considered. This assumption is extensible.
-\end{itemize}
-\subsection{Underwater Search Assumptions}
-
-\begin{itemize}
-\item Unlimited time is allowed for the underwater search. If limited time is allotted for an underwater search, then this would change the search regime slightly. This modification is not included in this paper, and constitutes a noticeable mathematical change.
-\item A current model exists that can predict by probability distribution the position of the plane body on the sea floor.
-\item While the plane may drift from the time of impact to when it hits the sea floor, once the plane is in contact with the sea floor, it does not move. 
-\end{itemize}
+\input{assumptions_file.tex}
 
 \section{General Discrete-effort Optimal Searching}
 
@@ -94,14 +71,15 @@ The discrete-effort method of Lawrence Stone's \textit{Theory of Optimal Search}
 
 \subsection{Defining the Search Method}
 
-The search space is divided into an integer number of ``cell'' segments $\mathcal{J}$. Each cell $j$ has a $\gamma_t(j,k)$, being the cost of the $k^{th}$ search in that cell using technology $t\in\mathcal{T}$. The efficiency of technologies used in the search are indexed for convenience in a set $\mathcal{T}$. This generalization of technology can be implemented for accurate measurements in subsequent uses. 
+The search space is divided into an integer number of ``cell'' segments $\mathcal{J}$. The specific technologies used in the search are indexed for convenience in a set $\mathcal{T}$. This generalization of technology can be implemented for accurate measurements in subsequent uses. Each cell $j$ has a $\gamma_t(j,k)$, being the cost of the $k^{th}$ search in cell $j$ using technology $t\in\mathcal{T}$. $\gamma_t(j,k)$ can be defined with respect to a general cost function, $c_t(j,k)$; this function is the cost of searching $j$ with $t$ a \textit{total} of $k$ times. Ergo, $$\gamma_t(j,k_n)=c_t(j,k_n)-c_t(j,k_{n-1})$$
 
+In other words, the cost of the $k_n$th unit of search effort is the net cost of the searches performed, minus all failed searches before.
 
-We denote the probability of debris existing in a given cell as $p(j)$. Assuming there truly is debris in cell $j$, the probability of locating an object there using technology $t$ on the $k^{th}$ search is referred to as $\beta_t(j,k)$.
+The probability of debris existing in a given cell is denoted by $p(j)$. Assuming there truly is debris in cell $j$, the probability of locating an object there using technology $t$ on the $k^{th}$ search is referred to as $\beta_t(j,k)$.
 
 The quantity $p(j)\beta(j,k)$ represents the actual chance of finding debris in the $j$th cell on the $k^{th}$ search. $\beta$ assumes the object is in the current cell being searched, where the product $\beta * p$ does not assume so.
 
-Next, the optimization problem is stated. The optimal individual cell to focus the search methods on is the one which provides the highest chance of success per unit search cost. We denote this value as $\epsilon$. This value is defined as $$\epsilon_t\equiv\epsilon_t(j,k)=\frac{p(j)\beta_t(j,k)}{\gamma_t(j,k)}$$. 
+Next, the optimization problem is stated. The optimal individual cell to focus the search methods on is the one which provides the highest chance of success per unit search cost. This value is denoted as $\epsilon$. This value is defined as $$\epsilon_t\equiv\epsilon_t(j,k)=\frac{p(j)\beta_t(j,k)}{\gamma_t(j,k)}$$. 
 
 An $\epsilon$ can be computed for each cell, accounting for the number of searches $k$ for each one. The highest values are the ones with the greatest probability of success per unit cost. 
 
