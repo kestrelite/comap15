@@ -6,3 +6,5 @@
 *.gz
 /JavaTest/nbproject/private/
 /JavaTest/build/
+*.gz
+*.log
