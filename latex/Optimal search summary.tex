@@ -84,7 +84,7 @@ The cost $\gamma(j,k)$ provides flexibility for the model in terms of prioritiza
 
 However, this approach is naive; considerations such as distance, time, and money may confound the cost of searching. Should these factors be disregarded, a $\gamma(j,k)=1$ will suffice. The resulting function $\gamma$ will depend entirely on the technology being used. 
 
-For instance, one may include a distance parameter in the cost of the function, such that $\gamma(j,k)=1+d$, where $d$ is the distance from the current position to the position under consideration. This has the benefit of moving ships around as little as possible. This idea will be explored further in the later discussion on accounting for assumptions. 
+For instance, one may include a distance parameter in the cost of the function, such that $\gamma(j,k)=1+d_{travel}$, where $d_{travel}$ is the distance from the current position to the position under consideration. This has the benefit of moving ships around as little as possible. One may also wish to make cost a function of time to search - in other words, $\gamma(j,k)=t_{search}+d_{travel}$. These ideas will be explored further in the later discussion on accounting for assumptions. 
 
 \subsection{Iterating Failures}
 
@@ -102,7 +102,13 @@ After a failed search, the probability of the plane being in cell $k$ becomes th
 
 \subsection{Executing the Search Method}
 
-Suppose there are $n$ items. 
+Suppose there is a set $\mathcal{T}$ of device types and $n_t$ devices of type $t\in\mathcal{T}$. For each device, the $\epsilon$ value is computed. This represents the probability of discovering the plane in comparison to the cost of its search.
+
+Each device is allocated sequentially to the square that is a) not already being searched, and b) has the highest $\epsilon$ value. Should two devices conflict over the optimal square, the closest device of that type claims it. Though travel time is not modeled, it is reasonable to make preliminary decisions in deference to it.
+
+Whenever a device finishes searching, the $p$-distribution is recomputed, the device's $\epsilon$ value is recomputed based on the new distribution, and it is sent out again. 
+
+In the case where the time allowed to search is not limited, this is optimal for detection. However, this is not the ideal when the time for searching is limited, as would be the case in an aerial flow model. In future applications, it would be possible to extend the aerial search model to allow for best-guessing after a constrained amount of time has expired.
 
 \section{Current Flow Modeling}
 

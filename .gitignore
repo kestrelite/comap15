@@ -1,3 +1,6 @@
 *.log
 *.pdf
 *.gz
+*.aux
+*.log
+*.gz
