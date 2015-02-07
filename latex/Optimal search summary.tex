@@ -61,7 +61,7 @@ A model for optimal discrete-time search and rescue in in water is presented. Th
 
 \section{Introduction}
 
-The model is partitioned into two separate searches. First, a visual aerial search is performed for floating debris, and locations of debris are indexed. A transformation is applied to convert positional data of debris into a probable area of the plane crash. An existing model for the oceanic currents of the region is presumed to already to exist. This model is used to predict the location of crash debris as a probability distribution. This positional prediction data is combined with data from the ocean current model in order to create a more localized search area of the wreckage on the sea floor. A second underwater search, informed by the aerial search, is then conducted via underwater vehicles utilizing sonar.
+The model is partitioned into two separate searches. First, a visual aerial search is performed for floating debris, and locations of debris are indexed. A transformation is applied to convert positional data of debris into a probable area of the plane crash. An existing model for the oceanic currents of the region is presumed to already exist. This model is used to predict the location of crash debris as a probability distribution. This positional prediction data is combined with data from the ocean current model in order to create a more localized search area of the wreckage on the sea floor. A second underwater search, informed by the aerial search, is then conducted via underwater vehicles utilizing sonar.
 
 \input{assumptions_file.tex}
 
@@ -119,7 +119,7 @@ Each device is allocated sequentially to the square that is a) not already being
 
 Whenever a device finishes searching, the $p$-distribution is recomputed, the device's $\epsilon$ value is recomputed based on the new distribution, and it is sent out again. 
 
-In the case where the time allowed to search is not limited, this is optimal for detection. However, this is not the ideal when the time for searching is limited, as would be the case in an aerial flow model. In future applications, it would be possible to extend the aerial search model to allow for best-guessing after a constrained amount of time has expired.
+A case where the time allowed to search is not limited is optimal for detection. However, this is not the ideal when the time for searching is limited, as would be the case in an aerial flow model. In future applications, it would be possible to extend the aerial search model to allow for best-guessing after a constrained amount of time has expired.
 
 \section{Current Flow Modeling}
 
@@ -138,5 +138,12 @@ Planes will search through cells in a manner specified by the general optimal se
 The presence of debris at cell $j$ is $d_j\in \{0,1\}$. It is assumed that there either is or is not debris in a cell. If debris is present, then $\mathtt{T}$ modifies the probability distribution $p_n$ in order to represent the likelihood that debris came from a plane crash. This is expressed as: $$\mathtt{T}(d_j,p_n)=p_n'$$
 
 Repeated application of $\mathtt{T}$ over each cell $d_j$ will create the new positional distribution informed by debris, $p_w$. This is created by: $$p_w=\mathtt{T}(d_1, \mathtt{T}(d_2, \ldots \mathtt{T}(d_j, p_n)\ldots))$$
+
+\section{Underwater Plane Body Search}
+The second step in the model is performing the underwater search. 
+
+Autonomous underwater vehicles will be dedicated to execute the general search method previously stated in section 3.5. The cost function $\gamma_t(j,k)$ is slightly altered. While still denoting cost, now $\gamma_t(j,k)=1+d$ where $d$ is the distance traveled by each vessel. This cost value seeks to minimize $d$ as to overall maximize the probability of successfully locating the vessel.
+
+    
 
 \end{document}
