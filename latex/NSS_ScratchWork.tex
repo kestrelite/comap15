@@ -1,0 +1,53 @@
+\documentclass[a4paper]{article}
+\usepackage[english]{babel}
+%\usepackage[utf8x]{inputenc}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{multicol}
+\usepackage{textcomp}
+\usepackage{gensymb}
+\usepackage{listings}
+\usepackage{color}
+\usepackage[margin=1in]{geometry}
+\title{Title}
+\author{Noah Sutton-Smolin}
+
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+\definecolor{black}{rgb}{0,0,0}
+
+\renewcommand\thesection{\arabic{section}}
+\renewcommand\thesubsection{\thesection.\arabic{subsection}}
+\renewcommand\thesubsubsection{\thesubsection.\arabic{subsubsection}}
+
+\lstset{frame=tb,
+  language=Java,
+  aboveskip=3mm,
+  belowskip=3mm,
+  showstringspaces=false,
+%  columns=flexible,
+  basicstyle={\small\ttfamily},
+  numbers=none,
+  numberstyle=\tiny\color{gray},
+  keywordstyle=\color{blue},
+  commentstyle=\color{dkgreen},
+  stringstyle=\color{mauve},
+  breaklines=true,
+  breakatwhitespace=true
+  tabsize=2
+}
+
+%\setlength\parindent{2em}
+%\setlength{\parskip}{5pt}
+%\renewcommand{\theenumi}{\Alph{enumi}}
+\begin{document}
+
+\begin{tabular}{|c|c|c}
+\hline
+\textbf{Variable} & \textbf{Definition} & \textbf{Description}\\
+\hline\hline
+\end{tabular}
+
+\end{document}
