@@ -54,14 +54,14 @@
 \begin{document}\maketitle
 
 \begin{abstract}
-A model for optimal discrete-time search and rescue in in water is presented. The search is split into two parts: the first is an aerial search for debris, and the second is an underwater search for the plane body. Using an external current model (not included in this paper), a transformation based on Bayes' rule is applied to the plane body's positional probability distribution. Searches are then optimized based on the likelihood of discovery versus the cost of search. Both the likelihood of discovery and cost may be changed on a per-technology basis, allowing for the simultaneous use of any number of different search technologies. 
+A model for optimal discrete-time search and rescue in in water is presented. The search is split into two parts: the first is a generalized aerial search for debris, and the second is an underwater search for the plane body.  Using an external current model (not included in this paper), a transformation based on Bayes' rule is applied to the plane body's positional probability distribution. Searches are then optimized based on the likelihood of discovery versus the cost of search. Both the likelihood of discovery and cost may be changed on a per-technology basis, allowing for the simultaneous use of any number of different search technologies. 
 \end{abstract}
 
 \pagebreak 
 
 \section{Introduction}
 
-The model is partitioned into two separate searches. First, a visual aerial search is performed for floating debris, and locations of debris are indexed. A transformation is applied to convert positional data of debris into a probable area of the plane crash. An existing model for the oceanic currents of the region is presumed to already to exist. This model is used to predict the locations of crash debris as a probability distribution. This positional prediction data is combined with data from the ocean current model in order to create a more localized search area of the wreckage on the sea floor. A second underwater search, informed by the aerial search, is then conducted via underwater vehicles utilizing sonar.
+The model is partitioned into two separate searches. First, a visual aerial search is performed for floating debris, and locations of debris are indexed. A transformation is applied to convert positional data of debris into a probable area of the plane crash. An existing model for the oceanic currents of the region is presumed to already to exist. This model is used to predict the location of crash debris as a probability distribution. This positional prediction data is combined with data from the ocean current model in order to create a more localized search area of the wreckage on the sea floor. A second underwater search, informed by the aerial search, is then conducted via underwater vehicles utilizing sonar.
 
 \section{Assumptions}
 
@@ -70,14 +70,14 @@ Assumptions may be broken into three categories: general assumptions, assumption
 \subsection{General Assumptions}
 
 \begin{itemize}
-\item Only one search occurs in a cell at a time. This assumption is extensible.
-\item When computing distances, the cell size is small enough to approximate Euclidean distance.
+\item Only one search occurs in a cell at a given time. This assumption is extensible.
+\item When computing distances, each cell size is small enough to approximate Euclidean distance.
 \end{itemize}
 
 \subsection{Aerial Search Assumptions}
 
 \begin{itemize}
-\item An accurate current model exists that is suitable for use in conjunction with this model. Such a current model would need to be able to advance forward in continuous-time or small discrete-time steps, as the probability distribution of debris will change both over time and with searches.
+\item An accurate model regarding ocean currents' ability to shift objects exists that is suitable for use in conjunction with this model. Such a current model would need to be able to advance forward in continuous-time or small discrete-time steps, as the probability distribution of debris will change vastly both over time and number of searches.
 \item Debris is either present or not present. Various types of debris and their individual implications are not considered. This assumption is extensible.
 \end{itemize}
 \subsection{Underwater Search Assumptions}
@@ -85,7 +85,7 @@ Assumptions may be broken into three categories: general assumptions, assumption
 \begin{itemize}
 \item Unlimited time is allowed for the underwater search. If limited time is allotted for an underwater search, then this would change the search regime slightly. This modification is not included in this paper, and constitutes a noticeable mathematical change.
 \item A current model exists that can predict by probability distribution the position of the plane body on the sea floor.
-\item While the plane may drift before it hits the sea floor, once the plane is in contact with the sea floor, it does not move. 
+\item While the plane may drift from the time of impact to when it hits the sea floor, once the plane is in contact with the sea floor, it does not move. 
 \end{itemize}
 
 \section{General Discrete-effort Optimal Searching}
@@ -113,15 +113,15 @@ This representation follows that each successive search has an exponentially dec
 
 \subsection{Cost Functions as Prioritization}
 
-The cost $\gamma(j,k)$ provides flexibility for the model in terms of prioritization. Suppose the cost per search is a constant value that is not one; then, a change of units can be easily applied in order to achieve $\gamma(j,k)=1$. In this case, the search regime simply optimizes for the highest chance of success. 
+The cost $\gamma(j,k)$ provides flexibility for the model in terms of prioritization. Suppose the cost per search is a constant value that is not one; then, a change of units can be easily applied in order to achieve $\gamma(j,k)=1$. In the current use of this model, the search regime simply optimizes for the highest chance of success. 
 
-However, this approach is naive; considerations such as distance, time, and money may confound the cost of searching. Should these factors be disregarded, a $\gamma(j,k)=1$ will suffice. The resulting function $\gamma$ will depend entirely on the technology being used. 
+However, considerations such as distance, time, and money may be confounding variables in the cost of searching. Should these factors be disregarded, a $\gamma(j,k)=1$ will suffice. The resulting function $\gamma$ will depend entirely on the technology being used. 
 
 For instance, one may include a distance parameter in the cost of the function, such that $\gamma(j,k)=1+d_{travel}$, where $d_{travel}$ is the distance from the current position to the position under consideration. This has the benefit of moving ships around as little as possible. One may also wish to make cost a function of time to search - in other words, $\gamma(j,k)=t_{search}+d_{travel}$. These ideas will be explored further in the later discussion on accounting for assumptions. 
 
 \subsection{Iterating Failures}
 
-In the event that the model does not find an object in cell $k$, the probability distribution must be modified to match. This modification, discussed in Bayesian search theory, occurs as follows. Let $T$ represent the probability that the plane is in the cell, and $F$ the probability that it is found. Then: 
+In the event that the model does not find an object in cell $k$, the probability distribution must be modified to accommodate for the altered search area. This modification, discussed in Bayesian search theory, occurs as follows. Let $T$ represent the probability that the plane is in the cell, and $F$ the probability that it is found. Then: 
 $$P(T|F)=\frac{P(T)P(F|T)}{P(F)}$$ 
 $$P(T|\sim F)=\frac{p(k)[1-\beta_t(j,k)]}{(p(k)[1-\beta_t(k,j)]+(1-p(k))}$$
 
