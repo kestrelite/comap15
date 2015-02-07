@@ -9,7 +9,6 @@ cells=11;
 P0=zeros(cells,cells);
 %P0 is initial probability distribution
 
-iterate=(cells-1)/2;
 %iterate is the amount of cells above and below the middle row of the
 %probability distribution
 min0=0.9;
