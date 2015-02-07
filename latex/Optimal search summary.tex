@@ -1,0 +1,84 @@
+\documentclass[a4paper]{article}
+\usepackage[english]{babel}
+%\usepackage[utf8x]{inputenc}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{multicol}
+\usepackage{textcomp}
+\usepackage{gensymb}
+\usepackage{listings}
+\usepackage{color}
+\usepackage[margin=1in]{geometry}
+\title{[temp] optimal searching}
+\author{The teeeeeeam}
+
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+\definecolor{black}{rgb}{0,0,0}
+
+\renewcommand\thesection{\arabic{section}}
+\renewcommand\thesubsection{\thesection.\arabic{subsection}}
+\renewcommand\thesubsubsection{\thesubsection.\arabic{subsubsection}}
+
+\lstset{frame=tb,
+  language=Java,
+  aboveskip=3mm,
+  belowskip=3mm,
+  showstringspaces=false,
+%  columns=flexible,
+  basicstyle={\small\ttfamily},
+  numbers=none,
+  numberstyle=\tiny\color{gray},
+  keywordstyle=\color{blue},
+  commentstyle=\color{dkgreen},
+  stringstyle=\color{mauve},
+  breaklines=true,
+  breakatwhitespace=true
+  tabsize=2
+}
+
+%\setlength\parindent{0em}
+%\setlength{\parskip}{5pt}
+%\renewcommand{\theenumi}{\Alph{enumi}}
+\begin{document}\maketitle\tableofcontents\pagebreak
+
+The model is constructed in two parts. First, an existing model for current of the region is assumed to exist. This model is used to predict the locations of debris as a probability distribution. An aerial search is performed for debris, and locations of debris are indexed. A transformation is applied to convert positional data of debris into probabalistic data over the location of the plane crash. This positional prediction data is combined with the previous current prediction model in order to create a more informed decision about where the plane might be. A second underwater search, informed by the aerial search, is conducted.
+
+\section{General Discrete-effort Optimal Searching}
+
+The discrete-effort method of Lawrence Stone's \textit{Theory of Optimal Search} is used in both searches to prioritize and distribute search efforts. An overview of this method is provided here. 
+
+\subsection{Defining the Search Method}
+
+The search space is divided into an integer number $\mathcal{J}$ regions called ``cells.'' The technologies used in the search are indexed for convenience in a set $\mathcal{T}$. 
+
+
+The cost of the $k$th search in the $j\in\mathcal{J}$th cell using technology $t\in\mathcal{T}$ is referenced as $\gamma_t(j,k)$. The probability of finding the object in cell $j$ (assuming it is there) using technology $t$ on the $k$th search is referenced as $\beta_t(j,k)$. Finally, the probability of an object existing in a given cell is $p(j)$. 
+
+The quantity $p(j)\beta(j,k)$ represents the actual chance of finding the object in the $j$th cell on the $k$th search. Where $\beta$ assumes the object is in the cell, the product $\beta * p$ does not.
+
+Next, the optimization problem is stated. The optimal location to search in is the one which provides the highest chance of success per unit search cost. This quantity is called $\epsilon$, and is defined as: $$\epsilon_t\equiv\frac{p(j)\beta_t(j,k)}{\gamma_t(j,k)}$$
+
+This value can be computed for the entire grid; the highest values are the ones with the greatest probability of success per unit cost. The generalization of a technology in detection is intended to allow for the use of technology with varying degrees of usefulness in specific applications.
+
+\subsection{Assigning values to $\beta_t(j,k)$}
+
+Suppose $\alpha_t$ is the success rate for a given piece of technology in locating a craft. (This success rate will depend upon the given technology and craft.) Then, from \textit{Theory of Optimal Search}: \[\beta_t(j,k)=\alpha_t\cdot(1-\alpha_t)^{k-1}\]
+
+This success rate is intuitively correct; each successive search has an exponentially decreasing chance of success. The derivation is not copied here. It is worth noting, however, that the $\alpha_t$ value will significantly depend on the technology used and the context within the model is applied.
+
+\subsection{Cost functions as prioritization}
+
+The cost $\gamma(j,k)$ provides flexibility for the model in terms of prioritization. Suppose the cost per search is a constant value that is not one; then, a change of units can be easily applied in order to achieve $\gamma(j,k)=1$. In this case, the search regime simply optimizes for the highest chance of success. 
+
+However, this approach is naive; considerations such as distance, time, and money may confound the cost of searching. Should these factors be disregarded, a $\gamma(j,k)=1$ will suffice. The resulting function $\gamma$ will depend entirely on the technology being used. 
+
+For instance, one may include a distance parameter in the cost of the function, such that $\gamma(j,k)=1+d$, where $d$ is the distance from the current position to the position under consideration. This has the benefit of moving ships around as little as possible. This idea will be explored further in the later discussion on accounting for assumptions. 
+
+\section{Aerial Searching (phase I)}
+
+
+
+\end{document}
