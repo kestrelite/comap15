@@ -1,4 +1,4 @@
-\documentclass[a4paper,twocolumns]{article}
+\documentclass[a4paper]{article}
 \usepackage[english]{babel}
 %\usepackage[utf8x]{inputenc}
 \usepackage{amsmath}
@@ -12,8 +12,9 @@
 \usepackage[margin=1in]{geometry}
 \usepackage{fancyhdr}
 
-\title{[temp] optimal searching}
-\author{The teeeeeeam}
+\title{Debris-Informed Underwater Search and Rescue Optimized in Two Parts}
+\author{J. Marsili, E. Nunn, N.A. Sutton-Smolin}
+\date{}
 
 \newcommand*{\Scale}[2][4]{\scalebox{#1}{$#2$}}
 \pagestyle{fancy}
@@ -50,10 +51,42 @@
 %\setlength\parindent{0em}
 %\setlength{\parskip}{5pt}
 %\renewcommand{\theenumi}{\Alph{enumi}}
-\begin{document}\maketitle\tableofcontents\pagebreak
-\begin{multicols}{2}
+\begin{document}\maketitle
 
-Our model is partitioned into two separate searches. First, a visual aerial search is performed for floating debris, and locations of debris are indexed. A transformation is applied to convert positional data of debris into a probable area of the plane crash. An existing model for the oceanic currents of the region is presumed to already to exist. This model is used to predict the locations of crash debris as a probability distribution. This positional prediction data is combined with data from the ocean current model in order to create a more localized search area of the wreckage on the sea floor. A  second underwater search, informed by the aerial search, is then conducted via underwater vehicles utilizing sonar.
+\begin{abstract}
+A model for optimal discrete-time search and rescue in in water is presented. The search is split into two parts: the first is an aerial search for debris, and the second is an underwater search for the plane body. Using an external current model (not included in this paper), a transformation based on Bayes' rule is applied to the plane body's positional probability distribution. Searches are then optimized based on the likelihood of discovery versus the cost of search. Both the likelihood of discovery and cost may be changed on a per-technology basis, allowing for the simultaneous use of any number of different search technologies. 
+\end{abstract}
+
+\pagebreak 
+
+\section{Introduction}
+
+The model is partitioned into two separate searches. First, a visual aerial search is performed for floating debris, and locations of debris are indexed. A transformation is applied to convert positional data of debris into a probable area of the plane crash. An existing model for the oceanic currents of the region is presumed to already to exist. This model is used to predict the locations of crash debris as a probability distribution. This positional prediction data is combined with data from the ocean current model in order to create a more localized search area of the wreckage on the sea floor. A second underwater search, informed by the aerial search, is then conducted via underwater vehicles utilizing sonar.
+
+\section{Assumptions}
+
+Assumptions may be broken into three categories: general assumptions, assumptions used for the aerial search, and assumptions used for the underwater search. A note that an assumption ``is extensible'' is used to indicate that the removal of the assumption from the model does not significantly complicate the mathematics used.
+
+\subsection{General Assumptions}
+
+\begin{itemize}
+\item Only one search occurs in a cell at a time. This assumption is extensible.
+\item When computing distances, the cell size is small enough to approximate Euclidean distance.
+\end{itemize}
+
+\subsection{Aerial Search Assumptions}
+
+\begin{itemize}
+\item An accurate current model exists that is suitable for use in conjunction with this model. Such a current model would need to be able to advance forward in continuous-time or small discrete-time steps, as the probability distribution of debris will change both over time and with searches.
+\item Debris is either present or not present. Various types of debris and their individual implications are not considered. This assumption is extensible.
+\end{itemize}
+\subsection{Underwater Search Assumptions}
+
+\begin{itemize}
+\item Unlimited time is allowed for the underwater search. If limited time is allotted for an underwater search, then this would change the search regime slightly. This modification is not included in this paper, and constitutes a noticeable mathematical change.
+\item A current model exists that can predict by probability distribution the position of the plane body on the sea floor.
+\item While the plane may drift before it hits the sea floor, once the plane is in contact with the sea floor, it does not move. 
+\end{itemize}
 
 \section{General Discrete-effort Optimal Searching}
 
@@ -128,5 +161,4 @@ The presence of debris at cell $j$ is $d_j\in \{0,1\}$. It is assumed that there
 
 Repeated application of $\mathtt{T}$ over each cell $d_j$ will create the new positional distribution informed by debris, $p_w$. This is created by: $$p_w=\mathtt{T}(d_1, \mathtt{T}(d_2, \ldots \mathtt{T}(d_j, p_n)\ldots))$$
 
-\end{multicols}
 \end{document}
