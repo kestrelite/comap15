@@ -12,7 +12,7 @@ cells = 125;
 discoveryChanceByIteration = zeros(searchIterations);
 
 probDistrib = (abs(peaks(cells) / (sum(sum(abs(peaks(cells)))))));
-figure(100); contour(probDistrib);
+%figure(100); contour(probDistrib);
 
 %shipCount=10; % Now a parameter
 shipLocMatrix=zeros(cells);
@@ -22,7 +22,14 @@ searchCount=zeros(cells);
 
 initialShipDistrib = probDistrib;
 shipLocations=zeros(1,shipCount);
+
+tmp1 = unique(probDistrib(:));
+highVals = tmp1(end-shipCount:end);
+maxPosArray = ismember(probDistrib, highVals);
+maxPositions = f
+
 for n=1:shipCount
+    
     maxProbabilityPos = find(initialShipDistrib == max(initialShipDistrib(:)));
     shipLocMatrix(maxProbabilityPos) = 1;
     initialShipDistrib(maxProbabilityPos) = 0;
@@ -81,7 +88,7 @@ for searchNum=1:searchIterations
     discoveryChanceByIteration(searchNum) = netDiscoveryChance;
 end
 
-numCells
+numCellsSearched = sum(size(find(searchCount >= 1)))-1;
 %figure(shipCount+1); contour(probDistrib);
 %figure(shipCount+2); HeatMap(searchCount);
 %disp(netDiscoveryChance);

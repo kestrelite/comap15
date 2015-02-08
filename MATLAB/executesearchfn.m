@@ -22,13 +22,18 @@ searchCount=zeros(cells);
 
 initialShipDistrib = probDistrib;
 shipLocations=zeros(1,shipCount);
+
+%Gets positions of highest in array
+tmp1 = unique(probDistrib(:));
+highVals = tmp1(end-shipCount:end);
+maxPosArray = ismember(probDistrib, highVals);
+maxPositions = find(maxPosArray == 1);
 for n=1:shipCount
-    maxProbabilityPos = find(initialShipDistrib == max(initialShipDistrib(:)));
+    maxProbabilityPos = maxPositions(n);
     shipLocMatrix(maxProbabilityPos) = 1;
     initialShipDistrib(maxProbabilityPos) = 0;
     shipLocations(n) = maxProbabilityPos;
 end
-
 %Search iterations! (under assumption of failure)
 
 for searchNum=1:searchIterations

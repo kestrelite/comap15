@@ -1,8 +1,12 @@
-numTrials = 100;
+% Noah Sutton-Smolin
+% Monte Carlo multithreaded search of the model space
+
+threaded = 1;
+numTrials = 25;
 
 %Input ranges
 searchItersMin = 10;
-searchItersMax = 100;
+searchItersMax = 1000;
 alphaMin = 0.25;
 alphaMax = 0.5;
 shipCountMin = 5;
@@ -22,10 +26,13 @@ m_shipCount = zeros(1,numTrials);
 m_percentSuccess = zeros(1,numTrials);
 m_distanceTraveled = zeros(1,numTrials);
 m_numSearchedSquares = zeros(1,numTrials);
+m_computationTime = zeros(1,numTrials);
 
 %Generate data
 
-matlabpool open
+if threaded == 1
+    matlabpool open
+end
 
 disp('Generating data...')
 t0 = clock;
@@ -47,13 +54,17 @@ parfor i=1:numTrials
     randAlpha = m_alpha(i);
     randShipCount = m_shipCount(i);
     %disp(strcat(num2str(i),'|',num2str(randSearchIters),'|',num2str(randAlpha),'|',num2str(randShipCount)));
-    
+
+    t1 = clock;
     [pr1, pr2, pr3] = executesearchfn(randSearchIters, randShipCount, randAlpha);
     
     m_percentSuccess(i) = pr1;
     m_distanceTraveled(i) = pr2;
     m_numSearchedSquares(i) = pr3;
+    m_timeSearched(i) = round(etime(clock,t0)*1000);
 end
 disp(num2str(round(etime(clock,t0)*1000)));
 
-matlabpool close
+if threaded == 1
+    matlabpool close
+end
