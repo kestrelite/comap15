@@ -31,51 +31,38 @@
 \renewcommand\thesubsection{\thesection.\arabic{subsection}}
 \renewcommand\thesubsubsection{\thesubsection.\arabic{subsubsection}}
 
-\lstset{frame=tb,
-  language=Java,
-  aboveskip=3mm,
-  belowskip=3mm,
-  showstringspaces=false,
-%  columns=flexible,
-  basicstyle={\small\ttfamily},
-  numbers=none,
-  numberstyle=\tiny\color{gray},
-  keywordstyle=\color{blue},
-  commentstyle=\color{dkgreen},
-  stringstyle=\color{mauve},
-  breaklines=true,
-  breakatwhitespace=true
-  tabsize=2
-}
-
 %\setlength\parindent{0em}
 %\setlength{\parskip}{5pt}
 %\renewcommand{\theenumi}{\Alph{enumi}}
 \begin{document}\maketitle
 
 \begin{abstract}
-A model for optimal discrete-time search and rescue in in water is presented. The search is split into two parts: the first is a generalized aerial search for debris, and the second is an underwater search for the plane body.  Using an external current model (not included in this paper), a transformation based on Bayes' rule is applied to the plane body's positional probability distribution. Searches are then optimized based on the likelihood of discovery versus the cost of search. Both the likelihood of discovery and cost may be changed on a per-technology basis, allowing for the simultaneous use of any number of different search technologies. 
+A model for optimal discrete-effort search and rescue for a plane in in water is presented. The search is split into two parts: the first is a aerial search for debris, and the second is an underwater search for the plane body. Both of these are generalized with respect to the technology used. A current model (not included in this paper) is used to generate probability distributions for debris and the plane body in the search area. This transformation allows for the use of debris data to aid the search for a lost plane. Searches in the water are then optimized based on the likelihood of discovery versus the cost of search. Both the likelihood of discovery and cost may be changed on a per-technology basis, allowing for the simultaneous use of any number of different search technologies.  
 \end{abstract}
 
 \pagebreak 
 
 \section{Introduction}
 
-The model is partitioned into two separate searches. First, a visual aerial search is performed for floating debris, and locations of debris are indexed. A transformation is applied to convert positional data of debris into a probable area of the plane crash. An existing model for the oceanic currents of the region is presumed to already exist. This model is used to predict the location of crash debris as a probability distribution. This positional prediction data is combined with data from the ocean current model in order to create a more localized search area of the wreckage on the sea floor. A second underwater search, informed by the aerial search, is then conducted via underwater vehicles utilizing sonar.
+The model is partitioned into two separate searches. First, a visual aerial search is performed for floating debris. Locations and times of discovery of debris are indexed. 
 
-\input{assumptions_file.tex}
+The current is applied to convert positional data of debris into a probable area of the plane crash. An existing model for the oceanic currents of the region is presumed to already exist. This model is used to predict the location of crash debris as a probability distribution. This positional prediction data is combined with data from the ocean current model in order to create a more localized search area of the wreckage on the sea floor. A second underwater search, informed by the aerial search, is then conducted via underwater vehicles utilizing sonar.
 
 \section{General Discrete-effort Optimal Searching}
 
 The discrete-effort method of Lawrence Stone's \textit{Theory of Optimal Search} is used in both searches to prioritize and distribute search efforts. An overview of this method is provided here. 
 
-\subsection{Defining the Search Method}
+\subsection{Defining the Terms Used in Searching}
 
-The search space is divided into an integer number of ``cell'' segments $\mathcal{J}$. The specific technologies used in the search are indexed for convenience in a set $\mathcal{T}$. This generalization of technology can be implemented for accurate measurements in subsequent uses. Each cell $j$ has a $\gamma_t(j,k)$, being the cost of the $k^{th}$ search in cell $j$ using technology $t\in\mathcal{T}$. $\gamma_t(j,k)$ can be defined with respect to a general cost function, $c_t(j,k)$; this function is the cost of searching $j$ with $t$ a \textit{total} of $k$ times. Ergo, $$\gamma_t(j,k_n)=c_t(j,k_n)-c_t(j,k_{n-1})$$
+The search space is divided into an integer number of ``cells'' $\mathcal{J}$. The specific technologies (i.e. one type of Autonomous Underwater Vehicle versus another) used in the search are indexed for convenience by integers in $\mathcal{T}$. This allows for implementation of different measurement accuracies and cost functions as technology advances, or simply as different technology is chosen. 
 
-In other words, the cost of the $k_n$th unit of search effort is the net cost of the searches performed, minus all failed searches before.
+For each technology $t\in\mathcal{T}$ used, each cell $j\in\mathcal{J}$ is associated with a cost of searching. This cost is expressed in terms of the cell number and the number of times searched: $\gamma_t(j,k)$. This represents the cost of the $k$th search in cell $j$ using technology $t$.
 
-The probability of debris existing in a given cell is denoted by $p(j)$. Assuming there truly is debris in cell $j$, the probability of locating an object there using technology $t$ on the $k^{th}$ search is referred to as $\beta_t(j,k)$.
+It is important to note that $\gamma_t(j,k)$ can be defined with respect to a general cost function, $c_t(j,k)$; by contrast, $c_t$ is the cost of searching  a \textit{total} of $k$ discrete times. Ergo, $$\gamma_t(j,k_n)=c_t(j,k_n)-c_t(j,k_{n-1})$$
+
+The probability of debris existing in a given cell is denoted by $p(j)$.
+
+Finally, $\beta_t(j,k)$ is the probability of locating an object in cell $j$ using tech $t$ on the $k$th attempt, assuming that the object is actually in cell $j$.
 
 The quantity $p(j)\beta(j,k)$ represents the actual chance of finding debris in the $j$th cell on the $k^{th}$ search. $\beta$ assumes the object is in the current cell being searched, where the product $\beta * p$ does not assume so.
 
@@ -120,6 +107,8 @@ Each device is allocated sequentially to the square that is a) not already being
 Whenever a device finishes searching, the $p$-distribution is recomputed, the device's $\epsilon$ value is recomputed based on the new distribution, and it is sent out again. 
 
 A case where the time allowed to search is not limited is optimal for detection. However, this is not the ideal when the time for searching is limited, as would be the case in an aerial flow model. In future applications, it would be possible to extend the aerial search model to allow for best-guessing after a constrained amount of time has expired.
+
+\input{assumptions_file.tex}
 
 \section{Current Flow Modeling}
 

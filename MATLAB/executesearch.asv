@@ -1,34 +1,48 @@
-%  Plane Search V0.1
+%  Plane Search V0.2
 %  executesearch.m
-%  Populates an initial probability matrix P0 based on:
+%  
 %  flightpath
 
-cells=11;
+cells=51;
 %Set cells to the amount of cells per side of probability distribution
 
-P0=zeros(cells,cells);
-%P0 is initial probability distribution
+P0=(abs(peaks(cells)/(sum(sum(abs(peaks(cells)))))));
+%P0 is initial probability distribution, representing the probability
+%that the plane is in each cell.
+%This command populates it with the peaks data set of size
+%cells x cells and converts it to a probability distribution
+%(sum of all elements = 1)
 
-iterate=(cells-1)/2;
-%iterate is the amount of cells above and below the middle row of the
-%probability distribution
-min0=0.9;
-max0=1.0;
-P0(round(cells/2),:)=randomizerow(cells,min0,max0);
-iterate = (cells-1)/2;
-decreaseFactor=1.1;
-for n1 = 1:iterate
-    P0(round(cells/2)-n1,:)= ...
-        randomizerow(cells,min0/(decreaseFactor^n1),max0/(decreaseFactor^n1));
-    P0(round(cells/2)+n1,:)= ...
-        randomizerow(cells,min0/(decreaseFactor^n1),max0/(decreaseFactor^n1));
-end
+ships=10;
+shipPos=zeros(cells);
+%ships = # of ships searching
+%Initiliazes matrix shipPos;
+%shipPos tracks the position of each ship
 
-planeAlpha = 0.3;
-trialsMat = zeros(cells);
-trialsMat(6,6) = 1;
+searchCount=zeros(cells);
+%Initializes matrix searchCount;
+%searchCount tracks the number of times each cell has been searched
 
-epsilonMat = P0 .* ((1 - planeAlpha).^trialsMat) * planeAlpha;
-epsilonMat;
-%P0
-    
+alpha = 0.45;
+
+%Alpha is the probability of finding the plane while searching for it
+%in a particular cell with a given technology.
+
+
+%%%epsilonMat=(P0.*alpha.*((1-alpha).^(k-1)))/(1+d);
+%Initializes the matrix epsilonMat, which stores the value for epsilon
+%in each cell.
+
+%betaref=alpha.*(1-alpha).^(searchCount-1)
+%Initializes the matrix betaref, which serves as a reference for the value
+%of beta at any cell. It takes into account the
+
+maxP0=find(P0 == max(P0(:)));
+
+%Finds the index of the current maximum value of P0.
+
+%%shipPos(maxP0)=1;
+P0(maxP0)
+%P0(maxP0)=(P0(maxP0)*(1-alpha*(1-alpha)^(searchCount(maxP0)-1))/ ...
+%    (1-P0(maxP0))
+
