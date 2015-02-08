@@ -1,6 +1,15 @@
 % Noah Sutton-Smolin
 % Monte Carlo multithreaded search of the model space
 
+% This run should take approximately 16 minutes
+% The run time is roughly linear with searchItersMax and shipCountMax
+% The run time is perfectly linear with numTrials
+
+% Configuring environment:
+% Parallel -> Manage Configurations
+% Open 'local' parameters, ClusterSize = [number of cores]
+% Save everything and hoorah, burn your CPU!
+
 threaded = 1;
 numTrials = 400;
 
