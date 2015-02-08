@@ -33,14 +33,13 @@ alpha = 0.45;
 %Initializes the matrix epsilonMat, which stores the value for epsilon
 %in each cell.
 
-%%%betaref=alpha.*(1-alpha).^(searchCount-1)
-%Initializes the matrix betaref, which serves as a reference for the value
-%of beta at any cell. It takes into account the
+for n=1:ships
+    maxP0ini=find(P0 == max(P0(:)))
+    shipPos(maxP0ini)=1;
+    shipPlacer = P0; shipPlacer(maxP0ini)=0;
+    maxP0s(n) = P0(maxP0ini);
+    
 
-maxP0=find(P0 == max(P0(:)))
-shipPos(maxP0)=1;
-iniMat = P0; iniMat(maxP0)=0;
-for n=
 %Finds the index of the current maximum value of P0.
 
 %P0(maxP0)

@@ -13,7 +13,7 @@ P0=(abs(peaks(cells)/(sum(sum(abs(peaks(cells)))))));
 %cells x cells and converts it to a probability distribution
 %(sum of all elements = 1)
 
-ships=10;
+ships=3;
 shipPos=zeros(cells);
 %ships = # of ships searching
 %Initiliazes matrix shipPos;
@@ -33,10 +33,14 @@ alpha = 0.45;
 %Initializes the matrix epsilonMat, which stores the value for epsilon
 %in each cell.
 
+shipPlacer = P0;
 for n=1:ships
-    maxP0=find(P0 == max(P0(:)))
-    shipPos(maxP0)=1;
-    shipPlacer = P0; shipPlacer(maxP0)=0;
+    maxP0ini=find(P0 == max(shipPlacer(:)))
+    shipPos(maxP0ini)=1;
+    shipPlacer(maxP0ini)=0;
+    maxP0valuesIni(n) = P0(maxP0ini);
+    maxP0locIni(n)= maxP0ini;
+end
 
 %Finds the index of the current maximum value of P0.
 
