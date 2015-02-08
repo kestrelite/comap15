@@ -1,7 +1,7 @@
 % Noah Sutton-Smolin
 % Monte Carlo multithreaded search of the model space
 
-% This run should take approximately 16 minutes
+% This run should take in the range of 11.1 minutes on four cores.
 % The run time is roughly linear with searchItersMax and shipCountMax
 % The run time is perfectly linear with numTrials
 
@@ -11,15 +11,15 @@
 % Save everything and hoorah, burn your CPU!
 
 threaded = 1;
-numTrials = 400;
+numTrials = 6000;
 
 %Input ranges
 searchItersMin = 10;
 searchItersMax = 1000;
 alphaMin = 0.20;
 alphaMax = 0.5;
-shipCountMin = 3;
-shipCountMax = 40;
+shipCountMin = 1;
+shipCountMax = 30;
 
 %Computed ranges
 searchItersRng = searchItersMax - searchItersMin;
@@ -70,7 +70,7 @@ parfor i=1:numTrials
     m_percentSuccess(i) = pr1;
     m_distanceTraveled(i) = pr2;
     m_numSearchedSquares(i) = pr3;
-    m_timeSearched(i) = round(etime(clock,t1)*1000);
+    m_computationTime(i) = round(etime(clock,t1)*1000);
     
     disp(strcat('E',num2str(i),'|',num2str(randSearchIters*randShipCount)));
 end

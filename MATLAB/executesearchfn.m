@@ -39,6 +39,10 @@ end
 for searchNum=1:searchIterations
     searchCount = searchCount + shipLocMatrix;
     betaMat = shipAlpha * ((1 - shipAlpha) .^ searchCount);    
+    %if mod(searchNum, 10) == 0
+    %    HeatMap(betaMat)
+    %end
+    
     for n=1:shipCount
         shipLoc = shipLocations(n);
         netDiscoveryChance = netDiscoveryChance + betaMat(shipLoc)*probDistrib(shipLoc);

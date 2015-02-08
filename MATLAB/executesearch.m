@@ -60,7 +60,7 @@ disp('Iterating search...')
 
 for searchNum=1:searchIterations
     searchCount = searchCount + shipLocMatrix;
-    betaMat = shipAlpha * ((1 - shipAlpha) .^ searchCount);    
+    betaMat = shipAlpha * ((1 - shipAlpha) .^ searchCount);
     if mod(searchNum, 50) == 0
         disp(searchNum)
     end
