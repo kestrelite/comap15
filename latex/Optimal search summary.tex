@@ -46,7 +46,7 @@ A model for optimal discrete-effort search and rescue for a plane in in water is
 
 The model is partitioned into two separate searches. First, a visual aerial search is performed for floating debris. Locations and times of discovery of debris are indexed. 
 
-The current is applied to convert positional data of debris into a probable area of the plane crash. An existing model for the oceanic currents of the region is presumed to already exist. This model is used to predict the location of crash debris as a probability distribution. This positional prediction data is combined with data from the ocean current model in order to create a more localized search area of the wreckage on the sea floor. A second underwater search, informed by the aerial search, is then conducted via underwater vehicles utilizing sonar.
+An existing model for the oceanic currents of the region is presumed to already exist. This model is then applied to convert positional data of debris into a probable area of the plane crash.  This positional prediction data is combined with data from the ocean current model in order to create a more localized search area of the wreckage on the sea floor. A second underwater search, informed by the aerial search, is then conducted via underwater vehicles utilizing sonar. The underwater search maximizes search effectiveness while minimizing cost and distance of searching. 
 
 \section{General Discrete-effort Optimal Searching}
 
@@ -66,7 +66,7 @@ Finally, $\beta_t(j,k)$ is the probability of locating an object in cell $j$ usi
 
 The quantity $p(j)\beta(j,k)$ represents the actual chance of finding debris in the $j$th cell on the $k^{th}$ search. $\beta$ assumes the object is in the current cell being searched, where the product $\beta * p$ does not assume so.
 
-Next, the optimization problem is stated. The optimal individual cell to focus the search methods on is the one which provides the highest chance of success per unit search cost. This value is denoted as $\epsilon$. This value is defined as $$\epsilon_t\equiv\epsilon_t(j,k)=\frac{p(j)\beta_t(j,k)}{\gamma_t(j,k)}$$. 
+Next, the optimization problem is stated. The optimal individual cell to focus the search methods on is the one which provides the highest chance of success per unit search cost. This value, denoted as $\epsilon$, is defined as $$\epsilon_t\equiv\epsilon_t(j,k)=\frac{p(j)\beta_t(j,k)}{\gamma_t(j,k)}$$. 
 
 An $\epsilon$ can be computed for each cell, accounting for the number of searches $k$ for each one. The highest values are the ones with the greatest probability of success per unit cost. 
 
@@ -106,13 +106,13 @@ Each device is allocated sequentially to the square that is a) not already being
 
 Whenever a device finishes searching, the $p$-distribution is recomputed, the device's $\epsilon$ value is recomputed based on the new distribution, and it is sent out again. 
 
-A case where the time allowed to search is not limited is optimal for detection. However, this is not the ideal when the time for searching is limited, as would be the case in an aerial flow model. In future applications, it would be possible to extend the aerial search model to allow for best-guessing after a constrained amount of time has expired.
+A case where the time allowed to search is unlimited is optimal for detection. However, it is more practical that the time is limited, as would be in the case in an aerial flow model. In future applications, it would be possible to extend the aerial search model to allow for best-guessing after a constrained amount of time has expired.
 
 \input{assumptions_file.tex}
 
 \section{Current Flow Modeling}
 
-Existing current models are sufficient for determining approximately where a piece of debris could have come from. These current models are not included in this paper, but their outputs important, and are declared as follows:
+Existing ocean current models are sufficient for determining approximately where a piece of debris could have come from. These current models are not included in this paper, although their outputs significant. and are declared as follows:
 
 A current model is assumed to generate two probability distributions: the first is the distribution of debris, and the second is the positional distribution of the plane. The debris distribution is $p_d(j)$ (for $j\in\mathcal{J}$). The plane's positional distribution is considered naive at the outset, as it is not yet informed by the position of debris. The naive positional distribution is $p_n(j)$. 
 
@@ -132,6 +132,16 @@ Repeated application of $\mathtt{T}$ over each cell $d_j$ will create the new po
 The second step in the model is performing the underwater search. 
 
 Autonomous underwater vehicles will be dedicated to execute the general search method previously stated in section 3.5. The cost function $\gamma_t(j,k)$ is slightly altered. While still denoting cost, now $\gamma_t(j,k)=1+d$ where $d$ is the distance traveled by each vessel. This cost value seeks to minimize $d$ as to overall maximize the probability of successfully locating the vessel.
+
+
+\section{Sensitivity Analysis}
+
+
+
+
+\section{Model Strengths and Weaknesses}
+
+
 
     
 
