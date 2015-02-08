@@ -2,15 +2,15 @@
 % Monte Carlo multithreaded search of the model space
 
 threaded = 1;
-numTrials = 25;
+numTrials = 400;
 
 %Input ranges
 searchItersMin = 10;
 searchItersMax = 1000;
-alphaMin = 0.25;
+alphaMin = 0.20;
 alphaMax = 0.5;
-shipCountMin = 5;
-shipCountMax = 30;
+shipCountMin = 3;
+shipCountMax = 40;
 
 %Computed ranges
 searchItersRng = searchItersMax - searchItersMin;
@@ -53,7 +53,7 @@ parfor i=1:numTrials
     randSearchIters = m_searchIters(i);
     randAlpha = m_alpha(i);
     randShipCount = m_shipCount(i);
-    disp(strcat('Start ',num2str(i),'|',randSearchIters*randShipCount));
+    disp(strcat('S',num2str(i),'|',num2str(randSearchIters*randShipCount)));
 
     t1 = clock;
     [pr1, pr2, pr3] = executesearchfn(randSearchIters, randShipCount, randAlpha);
@@ -63,7 +63,7 @@ parfor i=1:numTrials
     m_numSearchedSquares(i) = pr3;
     m_timeSearched(i) = round(etime(clock,t1)*1000);
     
-    disp(strcat('  End|',num2str(i)));
+    disp(strcat('E',num2str(i),'|',num2str(randSearchIters*randShipCount)));
 end
 disp(num2str(round(etime(clock,t0)*1000)));
 

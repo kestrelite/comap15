@@ -8,7 +8,7 @@ delete(findall(0, 'Type', 'Figure'))
 netDiscoveryChance = 0;
 distanceTraveled = 0;
 
-cells = 125;
+cells = 80;
 searchIterations = 1000;
 disp('Setting up search iteration chance...')
 discoveryChanceByIteration = zeros(searchIterations);

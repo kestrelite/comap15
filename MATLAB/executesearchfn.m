@@ -7,7 +7,7 @@ function [netDiscoveryChance, distanceTraveled, numCellsSearched] = executesearc
 netDiscoveryChance = 0;
 distanceTraveled = 0;
 
-cells = 125;
+cells = 80;
 %searchIterations = 100; % Now a parameter
 discoveryChanceByIteration = zeros(searchIterations);
 
