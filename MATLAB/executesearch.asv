@@ -4,6 +4,7 @@
 %  flightpath
 
 cells=7;
+cells2=cells*cells;
 %Set cells to the amount of cells per side of probability distribution
 
 P0=(abs(peaks(cells)/(sum(sum(abs(peaks(cells)))))));
@@ -13,7 +14,7 @@ P0=(abs(peaks(cells)/(sum(sum(abs(peaks(cells)))))));
 %cells x cells and converts it to a probability distribution
 %(sum of all elements = 1)
 
-ships=10;
+ships=3;
 shipPos=zeros(cells);
 %ships = # of ships searching
 %Initiliazes matrix shipPos;
@@ -28,17 +29,30 @@ alpha = 0.45;
 %Alpha is the probability of finding the plane while searching for it
 %in a particular cell with a given technology.
 
-
-%%%epsilonMat=(P0.*alpha.*((1-alpha).^(k-1)))/(1+d);
+for 
+epsilonMat=(P0.*alpha.*((1-alpha).^(k-1)))/(1+d);
 %Initializes the matrix epsilonMat, which stores the value for epsilon
 %in each cell.
 
+shipPlacer = P0;
+maxp0valuesIni(n)=zeros(1,ships);
+maxP
 for n=1:ships
-    maxP0ini=find(P0 == max(P0(:)))
+    maxP0ini=find(P0 == max(shipPlacer(:)));
     shipPos(maxP0ini)=1;
-    shipPlacer = P0; shipPlacer(maxP0ini)=0;
-    maxP0s(n) = P0(maxP0ini);
-    
+    shipPlacer(maxP0ini)=0;
+    maxP0valuesIni(n) = P0(maxP0ini);
+    maxP0locIni(n)= maxP0ini;
+end
+
+%This loop places the ships in the cells with the highest probability
+%of conducting a successful search.
+%It stores the maximum initial P0 values in the vector maxP0valuesIni
+%and the original location of those values in the vector maxP0locIni
+
+
+
+
 
 %Finds the index of the current maximum value of P0.
 
