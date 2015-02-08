@@ -10,7 +10,7 @@ searchItersMax = 1000;
 alphaMin = 0.25;
 alphaMax = 0.5;
 shipCountMin = 5;
-shipCountMax = 50;
+shipCountMax = 30;
 
 %Computed ranges
 searchItersRng = searchItersMax - searchItersMin;
@@ -53,7 +53,7 @@ parfor i=1:numTrials
     randSearchIters = m_searchIters(i);
     randAlpha = m_alpha(i);
     randShipCount = m_shipCount(i);
-    %disp(strcat(num2str(i),'|',num2str(randSearchIters),'|',num2str(randAlpha),'|',num2str(randShipCount)));
+    disp(strcat('Start ',num2str(i),'|',randSearchIters*randShipCount));
 
     t1 = clock;
     [pr1, pr2, pr3] = executesearchfn(randSearchIters, randShipCount, randAlpha);
@@ -61,7 +61,9 @@ parfor i=1:numTrials
     m_percentSuccess(i) = pr1;
     m_distanceTraveled(i) = pr2;
     m_numSearchedSquares(i) = pr3;
-    m_timeSearched(i) = round(etime(clock,t0)*1000);
+    m_timeSearched(i) = round(etime(clock,t1)*1000);
+    
+    disp(strcat('  End|',num2str(i)));
 end
 disp(num2str(round(etime(clock,t0)*1000)));
 
