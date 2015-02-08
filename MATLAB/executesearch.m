@@ -3,19 +3,26 @@
 %  
 %  flightpath
 
-searchIterations = 5;
-cells = 15;
+delete(findall(0, 'Type', 'Figure'))
+
+netDiscoveryChance = 0;
+distanceTraveled = 0;
+
+discoveryChanceByIteration = zeros(10000);
+searchIterations = 10000;
+cells = 200;
 cells2 = cells * cells;
 %Set cells to the amount of cells per side of probability distribution
 
 probDistrib = (abs(peaks(cells) / (sum(sum(abs(peaks(cells)))))));
+figure(100); contour(probDistrib);
 %probDistrib is initial probability distribution, representing the probability
 %that the plane is in each cell.
 %This command populates it with the peaks data set of size
 %cells x cells and converts it to a probability distribution
 %(sum of all elements = 1)
 
-ships=12;
+ships=10;
 shipLocMatrix=zeros(cells);
 %ships = # of ships searching
 %Initiliazes matrix shipPos;
@@ -46,16 +53,16 @@ end
 
 %First iteration under assumption of failure
 
-for searchNum=1:8
+for searchNum=1:searchIterations
+    searchCount = searchCount + shipLocMatrix;
+    betaMat = shipAlpha * ((1 - shipAlpha) .^ searchCount);    
     for n=1:ships
         shipLoc = shipLocations(n);
+        netDiscoveryChance = netDiscoveryChance + betaMat(shipLoc)*probDistrib(shipLoc);
         tmpProbDist = probDistrib .* (1 / (1 - betaMat(shipLoc)*probDistrib(shipLoc)));
         tmpProbDist(shipLoc) = probDistrib(shipLoc) * ((1 - betaMat(shipLoc))/(1-probDistrib(shipLoc)*betaMat(shipLoc)));
         probDistrib = tmpProbDist;
     end
-    
-    searchCount = searchCount + shipLocMatrix;
-    betaMat = shipAlpha * ((1 - shipAlpha) .^ searchCount);
     
     newShipLocations = zeros(1,ships);
     newShipLocMatrix = zeros(cells,cells);
@@ -73,15 +80,29 @@ for searchNum=1:8
         end
         
         perShipEpsilon = (probDistrib ./ distanceMatrix);
+        %perShipEpsilon = probDistrib;
         perShipEpsilon = betaMat .* perShipEpsilon;
         perShipEpsilon = (1 - newShipLocMatrix) .* perShipEpsilon;
         
         maxProbabilityPos = find(perShipEpsilon == max(perShipEpsilon(:)));
         newShipLocMatrix(maxProbabilityPos) = 1;
         newShipLocations(n) = maxProbabilityPos;
-        %figure(n); mesh(newShipLocMatrix);
+
+        newShipRow = mod(maxProbabilityPos-1, cells) + 1;
+        newShipCol = (shipLocations(n)-shipRow)/cells + 1;
+        distanceTraveled = distanceTraveled + sqrt((shipRow - newShipRow)^2 + (shipCol - newShipCol)^2);
+        
+        if searchNum == searchIterations 
+            %figure(n); contour(perShipEpsilon);
+        end
     end
     
     shipLocations = newShipLocations;
     shipLocMatrix = newShipLocMatrix;
+    %disp(netDiscoveryChance);
+    discoveryChanceByIteration(searchNum) = netDiscoveryChance;
 end
+figure(ships+1); contour(probDistrib);
+figure(ships+2); HeatMap(searchCount);
+disp(netDiscoveryChance);
+disp(distanceTraveled);
