@@ -34,32 +34,39 @@ shipPlacer = P0;
 maxP0valuesIni=zeros(1,ships);
 maxP0locIni=zeros(1,ships);
 for n=1:ships
-    maxP0ini=find(P0 == max(shipPlacer(:)));
+    maxP0ini=find(shipPlacer == max(shipPlacer(:)));
     shipPos(maxP0ini)=1;
+    searchCount(maxP0ini)=1;
     shipPlacer(maxP0ini)=0;
     maxP0valuesIni(n) = P0(maxP0ini);
     maxP0locIni(n)= maxP0ini;
 end
-
-for n=1:cell2
-    epsilonMat(n)=(P0(n).*alpha.*((1-alpha).^(k-1)))/(1+d);
-    %Initializes the matrix epsilonMat, which stores the value for epsilon
-    %in each cell.
-end
-
-
 
 %This loop places the ships in the cells with the highest probability
 %of conducting a successful search.
 %It stores the maximum initial P0 values in the vector maxP0valuesIni
 %and the original location of those values in the vector maxP0locIni
 
+epsilonMat=zeros(cells,cells);
+for n=1:cells2
+    epsilonMat(n)=(P0(n).*betaRef(n,alpha,searchCount));
+end
 
+%Initiates and populates the epsilon matrix epsilonMat without
+%the cost function.
 
+for n=1:cells2
+    P0(n)=P0(n).*((1/(1-P0(n).*betaRef(n,alpha,searchCount))));
+end
 
+%Apply's Bayesian Search Theory for all cells using  
 
-%Finds the index of the current maximum value of P0.
+for n=1:ships
+    P0(maxP0locIni(n))=P0(maxP0locIni(n))*((1-betaRef(maxP0locIni(n),alpha,searchCount))/...
+        (1-P0(n).*betaRef(n,alpha,searchCount)));
+end
 
-%P0(maxP0)
-%%%shipPos(maxP0)=1;
-%P0(maxP0)=(P0(maxP0)*betaRef(maxP0,alpha,searchCount));
+%
+
+%Initializes the matrix epsilonMat, which stores the value for epsilon
+%in each cell.

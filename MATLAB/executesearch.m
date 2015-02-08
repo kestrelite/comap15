@@ -3,7 +3,7 @@
 %  
 %  flightpath
 
-cells=7;
+cells=101;
 cells2=cells*cells;
 %Set cells to the amount of cells per side of probability distribution
 
@@ -34,7 +34,7 @@ shipPlacer = P0;
 maxP0valuesIni=zeros(1,ships);
 maxP0locIni=zeros(1,ships);
 for n=1:ships
-    maxP0ini=find(P0 == max(shipPlacer(:)));
+    maxP0ini=find(shipPlacer == max(shipPlacer(:)));
     shipPos(maxP0ini)=1;
     searchCount(maxP0ini)=1;
     shipPlacer(maxP0ini)=0;
@@ -52,5 +52,18 @@ for n=1:cells2
     epsilonMat(n)=(P0(n).*betaRef(n,alpha,searchCount));
 end
 
-%Initializes the matrix epsilonMat, which stores the value for epsilon
-%in each cell.
+%Initiates and populates the epsilon matrix epsilonMat without
+%the cost function.
+
+for n=1:cells2
+    P0(n)=P0(n).*((1/(1-(P0(n).*betaRef(n,alpha,searchCount)))));
+end
+
+%Applies Bayesian Search Theory for all cells using the unsearched
+%state. The loop below applies the Bayesian Search Theory for all cells
+%using the searched state for the searched cells.
+
+for n=1:ships
+    P0(maxP0locIni(n))=maxP0valuesIni(n)*((1-betaRef(maxP0locIni(n),alpha,searchCount))/...
+        (1-P0(n).*betaRef(n,alpha,searchCount)));
+end
