@@ -34,8 +34,8 @@ alpha = 0.45;
 %in each cell.
 
 shipPlacer = P0;
-maxp0valuesIni(n)=zeros(1,ships);
-maxP0locIni(n)=zeros(1,ships);
+maxp0valuesIni=zeros(1,ships);
+maxP0locIni=zeros(1,ships);
 for n=1:ships
     maxP0ini=find(P0 == max(shipPlacer(:)));
     shipPos(maxP0ini)=1;
