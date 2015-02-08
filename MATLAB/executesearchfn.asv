@@ -1,71 +1,40 @@
-%  Plane Search V0.2
-%  executesearch.m
-%  
-%  flightpath
+function [netDiscoveryChance, distanceTraveled, numCellsSearched] = executesearchfn(searchIterations, shipCount, shipAlpha)
 
-delete(findall(0, 'Type', 'Figure'))
+% Text comments removed in deference to code comments
+
+% delete(findall(0, 'Type', 'Figure'))
 
 netDiscoveryChance = 0;
 distanceTraveled = 0;
 
 cells = 125;
-searchIterations = 1000;
-disp('Setting up search iteration chance...')
+%searchIterations = 100; % Now a parameter
 discoveryChanceByIteration = zeros(searchIterations);
-%Set cells to the amount of cells per side of probability distribution
 
-disp('Setting up probDistrib...')
 probDistrib = (abs(peaks(cells) / (sum(sum(abs(peaks(cells)))))));
 figure(100); contour(probDistrib);
-%probDistrib is initial probability distribution, representing the probability
-%that the plane is in each cell.
-%This command populates it with the peaks data set of size
-%cells x cells and converts it to a probability distribution
-%(sum of all elements = 1)
 
-disp('Setting up ship locations and search count...')
-ships = 200;
-shipLocMatrix = zeros(cells);
-%ships = # of ships searching
-%Initiliazes matrix shipPos;
-%shipPos tracks the position of each ship
+%shipCount=10; % Now a parameter
+shipLocMatrix=zeros(cells);
 
-searchCount = zeros(cells);
-%Initializes matrix searchCount;
-%searchCount tracks the number of times each cell has been searched
-
-shipAlpha = 0.45;
-%shipAlpha is the probability of finding the plane while searching for it
-%in a particular cell with a given technology.
+searchCount=zeros(cells);
+%shipAlpha = 0.45; % Now a parameter
 
 initialShipDistrib = probDistrib;
-shipLocations=zeros(1,ships);
-
-disp('Running initial allocation...')
-for n=1:ships
+shipLocations=zeros(1,shipCount);
+for n=1:shipCount
     maxProbabilityPos = find(initialShipDistrib == max(initialShipDistrib(:)));
     shipLocMatrix(maxProbabilityPos) = 1;
     initialShipDistrib(maxProbabilityPos) = 0;
     shipLocations(n) = maxProbabilityPos;
 end
 
-%This loop places the ships in the cells with the highest probability
-%of conducting a successful search.
-%It stores the maximum initial probDistrib values in the vector maxP0valuesInit
-%and the original location of those values in the vector maxP0locInit
-
-%First iteration under assumption of failure
-
-disp('Iterating search...')
+%Search iterations! (under assumption of failure)
 
 for searchNum=1:searchIterations
     searchCount = searchCount + shipLocMatrix;
     betaMat = shipAlpha * ((1 - shipAlpha) .^ searchCount);    
-    if mod(searchNum, 50) == 0
-        disp(searchNum)
-    end
-    
-    for n=1:ships
+    for n=1:shipCount
         shipLoc = shipLocations(n);
         netDiscoveryChance = netDiscoveryChance + betaMat(shipLoc)*probDistrib(shipLoc);
         tmpProbDist = probDistrib .* (1 / (1 - betaMat(shipLoc)*probDistrib(shipLoc)));
@@ -73,9 +42,9 @@ for searchNum=1:searchIterations
         probDistrib = tmpProbDist;
     end
     
-    newShipLocations = zeros(1,ships);
+    newShipLocations = zeros(1,shipCount);
     newShipLocMatrix = zeros(cells,cells);
-    for n=1:ships
+    for n=1:shipCount
         distanceMatrix = zeros(cells, cells);
         shipRow = mod(shipLocations(n)-1, cells)+1; % Gets row based on single-dimension coord
         shipCol = (shipLocations(n)-shipRow)/cells+1; % Gets col based on single-dimension coord
@@ -89,7 +58,7 @@ for searchNum=1:searchIterations
         end
         
         perShipEpsilon = (probDistrib ./ distanceMatrix);
-        %perShipEpsilon = probDistrib;
+        %perShipEpsilon = probDistrib; % Alternately, ignore distance
         perShipEpsilon = betaMat .* perShipEpsilon;
         perShipEpsilon = (1 - newShipLocMatrix) .* perShipEpsilon;
         
@@ -111,7 +80,9 @@ for searchNum=1:searchIterations
     %disp(netDiscoveryChance);
     discoveryChanceByIteration(searchNum) = netDiscoveryChance;
 end
-figure(ships+1); contour(probDistrib);
-figure(ships+2); HeatMap(searchCount);
-disp(netDiscoveryChance);
-disp(distanceTraveled);
+
+numCells
+%figure(shipCount+1); contour(probDistrib);
+%figure(shipCount+2); HeatMap(searchCount);
+%disp(netDiscoveryChance);
+%disp(distanceTraveled);
