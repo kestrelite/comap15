@@ -10,7 +10,7 @@ While many of these assumptions can be removed from the model, the actual proces
 \item A known search space already exists between departure point and destination point.
 \item Only one search occurs in a cell at a time; only one vessel occupies a cell at a given time. This assumption is extensible by programmatically allowing multiple vessels to be in a given cell. However, the process for computing the probability of success is complicated by this extension, and is excluded from this paper.
 \item When computing distances, the curvature of the Earth is ignored; each cell size is considered small enough to approximate Euclidean distance. This is done to simplify the consideration of a two-dimensional grid; extension is fully possible through the inclusion of a concrete distance.
-\item The success of a craft searching a space can be measured directly as a probability of success, regardless of surroundings and extenuating conditions. This assumption also implies that either the sea floor is of uniform depth, or that the depth of the sea floor is not relevant to plane discovery. This is, however, extensible simply by making the $\beta_t(j,k)$ function vary with $j$ as a function of sea floor depth.
+  
 \item It is assumed that the time between issuing a search instruction and the time until that search begins is approximated by the distance the vessel has to move. This assumption is only partially extensible; inclusion of time into the model requires reworking the $\gamma$ function to vary with both distance and time.
 \item All cells are of equal size. This is relatively extensible. In order to adjust for this, however, one would need to adjust the probability of success, the cost of searching, and the probability of the object being in the cell according to the area of the cell. This is not a simple process, and it is not included here.
 \end{itemize}
@@ -25,8 +25,9 @@ While many of these assumptions can be removed from the model, the actual proces
 \subsection{Underwater Search Assumptions}
 
 \begin{itemize}
-\item Unlimited iterations of searching are allowed. While it would be possible to allow for finite searching without changing the algorithm, the search algorithm as-is would no longer be optimal. A constraint on allocation of effort places an additional constraint on optimization, as, after all available effort has been allocated, the algorithm would need to provide a best-guess answer. This modification constitutes a significant mathematical change.
+\item Unlimited iterations of searching are allowed. While it would be possible to allow for finite searching without changing the algorithm, the search algorithm, as-is, would no longer be optimal. 
+After all available effort has been allocated, the algorithm would need to provide a best-guess answer. Hence, a constraint on effort allocation places an additional constraint on optimization.  This modification constitutes a significant mathematical change.
 \item A current model exists that can predict an initial probability distribution of the position of the plane body on the sea floor. This probability distribution will be later informed by discovered debris.
 \item The plane does not drift once it makes contact with the sea floor.  
-\item Ocean floor depth is not relevant to the detection of the craft. While this is likely a weak assumption, it \textit{is} extensible. Based on the technical specifications of a given craft, a probability of success could be defined for a specific technology based on various impacting factors. For instance, $\beta_t(j,k)$ could be defined as a function of average floor depth at cell $j$.
+\item The success of a vehicle searching a space can be measured directly as a probability of success, regardless of surroundings and extenuating conditions. This assumption also implies that either the sea floor is of uniform depth and topography, or that the depth and topography of the sea floor is not relevant to plane discovery. While this is likely a weak assumption, this \textit{it} extensible simply by making the $\beta_t(j,k)$ function vary with cell $j$ as a function of sea floor depth. 
 \end{itemize}
