@@ -38,16 +38,14 @@
 \begin{document}\maketitle
 
 \begin{abstract}
-A model for optimal discrete-effort search and rescue for a plane in in water is presented. The search is split into two parts: the first is an aerial search for debris, and the second is an underwater search for the remainder of the plane body. Both of these are generalized with respect to the search technology used. A current model (not included in this paper) is used to generate probability distributions for debris and the plane body in the search area. This transformation allows debris data to aid the search for a lost plane. Searches in the water are then optimized based on the likelihood of discovery versus the cost of search. Both the likelihood of discovery and cost may be changed on a per-technology basis, allowing for the simultaneous use of any number of different search technologies. Results of test runs demonstrate a logarithmic relationship between percent success, number of search vehicles, and number of searches. A direct linear relationship was found between cost of searching, number of search vehicles, and number of searches. The model does not function optimally when cost is factored in. Computation time is linear with respect to iterations and number of ships. 
+A model for optimal discrete-effort search and rescue for a plane in water is presented. A current model (not included in this paper) is used to generate probability distributions for debris and the plane body in the search area. The search region is split into cells. An aerial search is then executed for debris. A transformation using the current model allows debris data to modify the probability distribution for the plane body. Searches in the water are then optimized. All searches are generalized with respect to the search technology used. Other research using a specific search technology is assumed to provide a probability of discovery given varying search conditions, such as the depth of the sea floor. Results of test runs demonstrate a logarithmic relationship between percent success and both quantity of search vehicles as well as quantity of searches. The computational cost of the model is estimated at $O(n)$ with respect to both quantity of search iterations and quantity of search vehicles. A comparison is made between a cost function that optimizes for distance and one which does not, revealing that an optimization for distance may reduce total distance traveled by up to a factor of 38.
 \end{abstract}
 
 \pagebreak 
 
 \section{Introduction}
 
-The model is partitioned into two separate searches. First, a visual aerial search is performed for floating debris. Locations and times of discovery of debris are indexed. 
-
-An existing model for the oceanic currents of the region is presumed to already exist. This model is then applied to convert positional data of debris into a probable area of the plane crash.  This positional prediction data is combined with data from the ocean current model in order to create a more localized search area of the wreckage on the sea floor. A second underwater search, informed by the aerial search, is then conducted via underwater vehicles utilizing sonar. The underwater search maximizes search effectiveness while minimizing cost and distance of searching. 
+% TODO
 
 \section{General Discrete-effort Optimal Searching}
 
@@ -128,9 +126,10 @@ The presence of debris at cell $j$ is $d_j\in \{0,1\}$. It is assumed that there
 Repeated application of $\mathtt{T}$ over each cell $d_j$ will create the new positional distribution informed by debris, $p_w$. This is created by: $$p_w=\mathtt{T}(d_1, \mathtt{T}(d_2, \ldots \mathtt{T}(d_j, p_n)\ldots))$$
 
 \section{Underwater Plane Body Search}
-The second step in the model is performing the underwater search. 
 
-Autonomous underwater vehicles will follow the general search method previously stated in section 3.5. The cost function $\gamma_t(j,k)$ is slightly altered. A distance cost is added: $\gamma_t(j,k)=d$, where $d$ is the distance that would be traversed by each vessel in moving from its current location to a new target cell $k$. This cost function seeks to minimize $d$ as to overall maximize the probability of successfully locating the vessel. Analysis of the effectiveness of this function is presented in the next section.
+The second step in the model is the execution of the underwater search. 
+
+Autonomous underwater vehicles will follow the general search method previously stated in section 3.5. However, the cost function $\gamma_t(j,k)$ is slightly altered. A cost with respect to distance is added: $\gamma_t(j,k)=d$, where $d$ is the distance that would be traversed by each vessel in moving from its current location to a new target cell $k$. This cost function will minimize $d$ for each search. 
 
 \section{Model Analysis}
 
@@ -149,6 +148,8 @@ $CT$ & Computation time for model (in ms) &&\\\hline
 \end{tabular}\end{center}
 \caption{Table of parameters and collected outputs.}
 \end{figure}
+
+These values were selected around a range which has been conducted in the past.  According to the Australian Government's Joint Agency Coordination Center's ``Search for MH370, Facts and Statistics,'' up to 19 ships were used to cover the search area. In ``Operations Analysis during the Underwater Search for Scorpion,'' (by L.D. Stone, et. al.) an expected range for $\alpha$ is provided.  A range for search iteration was selected in order to highlight the dynamics of the model.
 
 In order to fully observe the dynamics of the search, all cell searches are assumed to have failed. This is simply a consequence of the fact that if the search had succeeded, it would have stopped. The goal is to observe dynamics.
 
@@ -331,9 +332,7 @@ The computational time follows a strongly logarithmic plot in the normal case, b
 
 Additionally, a second unexplained behavior occurs around 3000 msec. The underside of the graph begins to expand outward - but it suddenly converges again in with the main path around 3000 msec. The cause of this is unknown, and this behavior is as yet uncharacterized. 
 
-\section{Conclusions}
-
-
+Finally, additional probability distributions would need to be studied in order to reach a definitive conclusion about the model dynamics.
 
 \pagebreak
 
