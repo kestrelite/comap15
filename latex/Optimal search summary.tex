@@ -37,7 +37,7 @@
 \begin{document}\maketitle
 
 \begin{abstract}
-A model for optimal discrete-effort search and rescue for a plane in in water is presented. The search is split into two parts: the first is an aerial search for debris, and the second is an underwater search for the remainder of the plane body. Both of these are generalized with respect to the technology used. A current model (not included in this paper) is used to generate probability distributions for debris and the plane body in the search area. This transformation allows debris data to aid the search for a lost plane. Searches in the water are then optimized based on the likelihood of discovery versus the cost of search. Both the likelihood of discovery and cost may be changed on a per-technology basis, allowing for the simultaneous use of any number of different search technologies. Results of test runs demonstrate a logarithmic relationship between percent success, number of search vehicles, and number of searches. A direct linear relationship was found between cost of searching, number of search vehicles, and number of searches. The model does not function optimally when cost is factored in. Computation time is linear with respect to iterations and number of ships. 
+A model for optimal discrete-effort search and rescue for a plane in in water is presented. The search is split into two parts: the first is an aerial search for debris, and the second is an underwater search for the remainder of the plane body. Both of these are generalized with respect to the search technology used. A current model (not included in this paper) is used to generate probability distributions for debris and the plane body in the search area. This transformation allows debris data to aid the search for a lost plane. Searches in the water are then optimized based on the likelihood of discovery versus the cost of search. Both the likelihood of discovery and cost may be changed on a per-technology basis, allowing for the simultaneous use of any number of different search technologies. Results of test runs demonstrate a logarithmic relationship between percent success, number of search vehicles, and number of searches. A direct linear relationship was found between cost of searching, number of search vehicles, and number of searches. The model does not function optimally when cost is factored in. Computation time is linear with respect to iterations and number of ships. 
 \end{abstract}
 
 \pagebreak 
@@ -54,9 +54,9 @@ The discrete-effort method of Lawrence Stone's \textit{Theory of Optimal Search}
 
 \subsection{Defining the Terms Used in Searching}
 
-The search space is divided into an integer number of ``cells'' $\mathcal{J}$. The specific technologies (i.e. one type of Autonomous Underwater Vehicle versus another) used in the search are indexed for convenience by integers in $\mathcal{T}$. This allows for implementation of different measurement accuracies and cost functions as technology advances, or simply as different technology is chosen. 
+The search space $\mathcal{J}$ is divided into an integer number of uniformly square cells $j\in\mathcal{J}$. The specific technologies (i.e. one type of Autonomous Underwater Vehicle versus another) used in the search are indexed for convenience by integers in $\mathcal{T}$. This allows for implementation of different measurement accuracies and cost functions as search technology advances, or simply as different technology is chosen. 
 
-For each technology $t\in\mathcal{T}$ used, each cell $j\in\mathcal{J}$ is associated with a cost of searching. This cost is expressed in terms of the cell number and the number of times searched: $\gamma_t(j,k)$. This represents the cost of the $k$th search in cell $j$ using technology $t$.
+For each search technology $t\in\mathcal{T}$ used, each cell $j\in\mathcal{J}$ is associated with a cost of searching. This cost is expressed in terms of the cell number and the number of times searched: $\gamma_t(j,k)$. This represents the cost of the $k$th search in cell $j$ using technology $t$.
 
 It is important to note that $\gamma_t(j,k)$ can be defined with respect to a general cost function, $c_t(j,k)$; by contrast, $c_t$ is the cost of searching  a \textit{total} of $k$ discrete times. Ergo, $$\gamma_t(j,k_n)=c_t(j,k_n)-c_t(j,k_{n-1})$$
 
@@ -72,41 +72,39 @@ An $\epsilon$ can be computed for each cell, accounting for the number of search
 
 \subsection{Assigning Values to $\beta_t(j,k)$}
 
-Suppose $\alpha_t$ is the success rate for locating surface wreckage, with technology and search aircraft as parameters. Then, from \textit{Theory of Optimal Search}: \[\beta_t(j,k)=\alpha_t\cdot(1-\alpha_t)^{k-1}\]
+Suppose $\alpha_t$ is the success rate for locating an object, whether underwater or aerial, with $t\in\mathcal{T}$. Then, from \textit{Theory of Optimal Search}: \[\beta_t(j,k)=\alpha_t\cdot(1-\alpha_t)^{k-1}\]
 
 This representation follows that each successive search has an exponentially decreasing chance of success. The derivation is not copied here. It is worth noting, however, that the $\alpha_t$ value will significantly depend on the technology used and the context within the model is applied.
 
 \subsection{Cost Functions as Prioritization}
 
-The cost $\gamma(j,k)$ provides flexibility for the model in terms of prioritization. Suppose the cost per search is a constant value that is not one; then, a change of units can be easily applied in order to achieve $\gamma(j,k)=1$. In the current use of this model, the search regime simply optimizes for the highest chance of success. 
+The cost $\gamma_t(j,k)$ provides flexibility for the model in terms of prioritization. Considerations such as distance, time, and money may be confounding variables in the cost of searching. The resulting function $\gamma$ will depend entirely on the technology being used. In this model, the cost of searching a cell is assumed to be equal to the distance traveled to reach the cell. In this way, distance, travel time, and monetary cost are roughly minimized.
 
-However, considerations such as distance, time, and money may be confounding variables in the cost of searching. Should these factors be disregarded, a $\gamma(j,k)=1$ will suffice. The resulting function $\gamma$ will depend entirely on the technology being used. 
+In this model, the distance parameter in the cost of the function, such that $\gamma_t(j,k)=d_{travel}$, where $d_{travel}$ is the Euclidean distance in cells from the current position to the position under consideration. This has the benefit of moving ships around as little as possible. One may extend the cost function by including the time to search - in other words, $\gamma(j,k)=t_{search}+d_{travel}$. The inclusion of travel time implies specifying the technology to be used, however; as a result, this method of prioritization is not included here.  
 
-For instance, one may include a distance parameter in the cost of the function, such that $\gamma(j,k)=1+d_{travel}$, where $d_{travel}$ is the distance from the current position to the position under consideration. This has the benefit of moving ships around as little as possible. One may also wish to make cost a function of time to search - in other words, $\gamma(j,k)=t_{search}+d_{travel}$. These ideas will be explored further in the later discussion on accounting for assumptions. 
+\subsection{Evolving Probability Distributions over Failed Searches}
 
-\subsection{Iterating Failures}
-
-In the event that the model does not find an object in cell $k$, the probability distribution must be modified to accommodate for the altered search area. This modification, discussed in Bayesian search theory, occurs as follows. Let $T$ represent the probability that the plane is in the cell, and $F$ the probability that it is found. Then: 
+In the event that the model does not find an object in cell $k$, the probability distribution must be modified to accommodate for the altered search area. Let $T$ represent the probability that the plane is in the cell, and $F$ the probability that it is found. Then: 
 $$P(T|F)=\frac{P(T)P(F|T)}{P(F)}$$ 
-$$P(T|\sim F)=\frac{p(k)[1-\beta_t(j,k)]}{(p(k)[1-\beta_t(k,j)]+(1-p(k))}$$
+$$P(T|\sim F)=\frac{p(j)[1-\beta_t(j,k)]}{(p(j)[1-\beta_t(j,k)]+(1-p(j))}$$
 
-Thus, the posterior probability that it is there but was not found is: $$p'(k)=p(k)\frac{1-\beta_t(j,k)}{1-\beta_t(k,j)p(k)}$$.
+By reduction, the posterior probability that the object is there but was not found is: $$p'(j)=p(j)\frac{1-\beta_t(j,k)}{1-\beta_t(j,k)p(j)},\;\mbox{where }j\mbox{ is searched}$$.
 
-The posterior probability of every other square can be similarly adjusted (though its proof is omitted): $$p'(k)=p(k)\frac{1}{1-p(k)\beta_t(j,k)}$$
+The posterior probability of every other square can be similarly adjusted by the knowledge that an object was not discovered in cell $k$ (though its proof is omitted): $$p'(j)=p(j)\frac{1}{1-p(j)\beta_t(j,k)},\;\mbox{where }j\mbox{ is not searched.}$$
 
-(The notation here may be confusing. For clarification, the first $p'(k)$ adjustment applies only to the square that was searched; the second applies to every other square.)
+After the application of these transformations, as $p'$ is a probability distribution, the quantity $$\sum_{j\in\mathcal{J}}p'(j) = 1$$
 
-After a failed search, the probability of the plane being in cell $k$ becomes this probability.
+(The notation here may be confusing. For clarification, the first $p'(j)$ adjustment applies only to the square that was searched; the second applies to every other square.)
+
+After a failed search, the probability of the plane being in cell $j$ becomes this probability.
 
 \subsection{Executing the Search Method}
 
-Suppose there is a set $\mathcal{T}$ of device types and $n_t$ devices of type $t\in\mathcal{T}$. For each device, the $\epsilon$ value is computed. This represents the probability of discovering the plane in comparison to the cost of its search.
+Suppose there is a set $\mathcal{T}$ of search technologies and $n_t$ instances of technology $t\in\mathcal{T}$. For each device, the $\epsilon$ value is computed. Optimizing this value returns the highest probability of object discovery per unit cost.
 
-Each device is allocated sequentially to the square that is a) not already being searched, and b) has the highest $\epsilon$ value. Should two devices conflict over the optimal square, the closest device of that type claims it. Though travel time is not modeled, it is reasonable to make preliminary decisions in deference to it.
+Each device is allocated sequentially to a square that is a) not already being searched, and b) has the highest $\epsilon$ value for that technology. Should two devices conflict in their optimal square, the closest device of that type claims it. Though travel time is not modeled, it is reasonable to make preliminary decisions in deference to it.
 
-Whenever a device finishes searching, the $p$-distribution is recomputed, the device's $\epsilon$ value is recomputed based on the new distribution, and it is sent out again. 
-
-A case where the time allowed to search is unlimited is optimal for detection. However, it is more practical that the time is limited, as would be in the case in an aerial flow model. In future applications, it would be possible to extend the aerial search model to allow for best-guessing after a constrained amount of time has expired.
+Whenever a device finishes searching, the probability distribution of the object's position is recomputed according to the above transformation, the device's $\epsilon$ value is recomputed based on the new distribution, and it is assigned to a new cell.
 
 \input{assumptions_file.tex}
 
