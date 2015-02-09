@@ -10,7 +10,7 @@
 \usepackage{listings}
 \usepackage{color}
 \usepackage[margin=1cm]{caption}
-%\usepackage[margin=1in]{geometry}
+\usepackage[margin=1in]{geometry}
 \usepackage{fancyhdr}
 
 \title{Debris-Informed Underwater Search and Rescue Optimized in Two Parts}
@@ -38,18 +38,23 @@
 \begin{document}\maketitle
 
 \begin{abstract}
-A model for optimal discrete-effort search for a plane presumed to be lost in open ocean is presented. A pre-existing ocean current model is used to generate probability distributions for debris and the plane body in the search area. The search region is split into smaller cells. An aerial search is then executed for debris. A statistical transformation using the ocean current model allows input of debris data to modify the probability distribution for the location of the plane body on the seafloor. Searches underwater are then optimized with respect to chance of discovery and search cost. Search cost is expressed as a function of distance. These searches are generalized with respect to the search technology used. A measure of the efficiency of such search technologies is referenced and assumed to be given by other research. A measure of the chance of discovery of an object is given by previous research of search technologies . Results of test runs demonstrate a logarithmic relationship between percent success and both quantity of search vehicles as well as quantity of searches. The computational cost of the model is estimated at $O(n)$ with respect to both quantity of search iterations and quantity of search vehicles. A comparison is made between a simulation that optimizes cost, which is expressed as a function of total search vehicle travel distance, and one that does not. This comparison revealed that optimizing the cost may reduce total distance traveled by up to a factor of 38.
+A model for optimal discrete-effort search for a plane lost in open ocean is presented. A pre-existing ocean current model is assumed to generate probability distributions for debris and the plane body in the search area. The search region is split into smaller cells. An aerial search is then executed for debris. The probability distribution for the location of the plane body on the seafloor is then modified by the current model using a statistical transformation on the data. Searches underwater are then optimized with respect to chance of discovery and search cost. Two search cost functions are compared. Both searches are generalized with respect to the search technology used. A measure of the efficiency of search technologies is referenced and assumed to be given by other research. In this way, the model is generalized with respect to search technology used; any technology will work. Results of test runs demonstrate a logarithmic relationship between percent success and both quantity of search vehicles as well as quantity of searches. The computational cost of the model is estimated at $O(n)$ with respect to both quantity of search iterations and quantity of search vehicles. A comparison is made between a simulation that optimizes cost, which is expressed as a function of total search vehicle travel distance, and one that does not. This comparison revealed that optimizing the travel distance may reduce total distance traveled by up to a factor of 38 while only marginally sacrificing total search effectiveness.
 \end{abstract}
 
 \pagebreak 
 
 \section{Introduction}
 
-% TODO
-
+\begin{itemize}
+\item Motivation
+\item Underwater and surface current models for probability
+\item Needed values of existing technology
+\item Generalization w.r.t. search planes
+\item Generalization w.r.t. fallen planes
+\end{itemize}
 \section{General Discrete-effort Optimal Searching}
 
-The discrete-effort method of Lawrence Stone's \textit{Theory of Optimal Search} is used in both searches to prioritize and distribute search efforts. An overview of this method is provided here. 
+A modified discrete-effort method derived Lawrence Stone's \textit{Theory of Optimal Search} is used in both searches to prioritize and distribute search efforts. An overview of this method is provided here. 
 
 \subsection{Defining the Terms Used in Searching}
 
@@ -316,9 +321,6 @@ In order to investigate this behavior further, a moving average was taken of $\a
 This seems to indicate that, for an $\alpha$ around 0.28, the search success does not suffer, but it seems to begin to suffer slightly past another $\alpha$ around 0.43. However, this is a purely qualitative assessment, and does not represent any statistical measurement.
 
 Nevertheless, $\alpha$ is sufficiently linear over the operating range of values that the dynamics of this value may not impact the model in operation; it is strictly a mathematical exercise.
-
-\subsection{Model Strengths and Weaknesses}
-
 
 \section{Future studies}
 
