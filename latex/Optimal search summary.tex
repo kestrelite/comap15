@@ -261,7 +261,17 @@ This makes intuitive sense. The total number of searches is equal to $n*i$, and 
 
 \subsection{Sensitivity of Distance Traveled}
 
+The distance traveled is revealed to be linear with respect to the number of ships and number of iterations. These results both confirm what one might intuitively surmise: each iteration will have an approximately constant travel distance, and each ship will travel the same distance in an iteration.
 
+The following comparisons were extracted from the Monte Carlo simulation:
+
+\begin{figure}[H]\begin{center}
+\includegraphics[scale=0.5]{../Matlab/Images/DistTraveledByIterCount.png}
+\includegraphics[scale=0.5]{../Matlab/Images/DistTraveledByShipCount.png}
+\caption{Blue lines are linear fits; Search count linear fit: $7.4547x-26.2551$; ship count linear fit: $223.9765x-88.9555$.}
+\end{center}\end{figure}
+
+[current progress ends here]
 
 \pagebreak
 
