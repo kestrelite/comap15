@@ -10,7 +10,7 @@
 \usepackage{listings}
 \usepackage{color}
 \usepackage[margin=1cm]{caption}
-\usepackage[margin=1in]{geometry}
+%\usepackage[margin=1in]{geometry}
 \usepackage{fancyhdr}
 
 \title{Debris-Informed Underwater Search and Rescue Optimized in Two Parts}
@@ -38,7 +38,7 @@
 \begin{document}\maketitle
 
 \begin{abstract}
-A model for optimal discrete-effort search and rescue for a plane in water is presented. A current model (not included in this paper) is used to generate probability distributions for debris and the plane body in the search area. The search region is split into cells. An aerial search is then executed for debris. A transformation using the current model allows debris data to modify the probability distribution for the plane body. Searches in the water are then optimized. All searches are generalized with respect to the search technology used. Other research using a specific search technology is assumed to provide a probability of discovery given varying search conditions, such as the depth of the sea floor. Results of test runs demonstrate a logarithmic relationship between percent success and both quantity of search vehicles as well as quantity of searches. The computational cost of the model is estimated at $O(n)$ with respect to both quantity of search iterations and quantity of search vehicles. A comparison is made between a cost function that optimizes for distance and one which does not, revealing that an optimization for distance may reduce total distance traveled by up to a factor of 38.
+A model for optimal discrete-effort search for a plane presumed to be lost in open ocean is presented. A pre-existing ocean current model is used to generate probability distributions for debris and the plane body in the search area. The search region is split into smaller cells. An aerial search is then executed for debris. A statistical transformation using the ocean current model allows input of debris data to modify the probability distribution for the location of the plane body on the seafloor. Searches underwater are then optimized with respect to chance of discovery and search cost. Search cost is expressed as a function of distance. These searches are generalized with respect to the search technology used. A measure of the efficiency of such search technologies is referenced and assumed to be given by other research. A measure of the chance of discovery of an object is given by previous research of search technologies . Results of test runs demonstrate a logarithmic relationship between percent success and both quantity of search vehicles as well as quantity of searches. The computational cost of the model is estimated at $O(n)$ with respect to both quantity of search iterations and quantity of search vehicles. A comparison is made between a simulation that optimizes cost, which is expressed as a function of total search vehicle travel distance, and one that does not. This comparison revealed that optimizing the cost may reduce total distance traveled by up to a factor of 38.
 \end{abstract}
 
 \pagebreak 
@@ -317,6 +317,9 @@ This seems to indicate that, for an $\alpha$ around 0.28, the search success doe
 
 Nevertheless, $\alpha$ is sufficiently linear over the operating range of values that the dynamics of this value may not impact the model in operation; it is strictly a mathematical exercise.
 
+\subsection{Model Strengths and Weaknesses}
+
+
 \section{Future studies}
 
 There are several areas of future study. The first is, of course, $\alpha$ dynamics. It is necessary to understand how the $\alpha$ value impacts the model. For now, however, it is sufficient to assume that the $\alpha$ value does not have a considerable impact on the net search outcome. 
@@ -337,11 +340,18 @@ Finally, additional probability distributions would need to be studied in order 
 \pagebreak
 
 \begin{thebibliography}{10}
-\bibitem{TF} Furukawa, T., Bourgault, F., Lavis, B., Durrant-Whyte F., H., \emph{``Recursive Bayesian Search-and-Tracking Using Coordinated UAVs for Lost Targets"}, IEEE International Conference on Robotics and Automation, 2006. 
+\bibitem{TF} T. Furukawa, F. Bourgault, B. Lavis, H.F. Durrant-Whyte, \emph{``Recursive Bayesian Search-and-Tracking Using Coordinated UAVs for Lost Targets"}, IEEE International Conference on Robotics and Automation, 2006. 
+
+%\bibitem{JA} \emph{``Search for MH370 Facts and statistics Surface search of the southern Indian Ocean 17 March–28 April 2014"}, Joint Agency Coordination Centre, http://www.jacc.gov.au/search/files/MH370_Facts_and_statistics-Surface_search_of_the_southern_Indian_Ocean, PDF.
+
 \bibitem{LL} L.C.M. Lebreton, S.D. Greer, J.C. Borrero, \emph{``Numerical modeling of floating debris in the world’s oceans"}, Marine Pollution Bulletin, Volume 64, Issue 3, March 2012, Pages 653-661, ISSN 0025-326X, http://dx.doi.org/10.1016/j.marpolbul.2011.10.027.
-\bibitem{Mackay98} Mackay, D.J.C, \emph{``Introduction to Monte Carlo Methods"}, submitted for publication.
+
+\bibitem{Mackay98} D.J.C. Mackay, \emph{``Introduction to Monte Carlo Methods"}, submitted for publication.
+
 \bibitem{HR} Henry R. Richardson and Lawrence D. Stone, \emph{``Operations analysis during the underwater search for Scorpion"}, submitted for publication. 
-\bibitem{Stone75} Stone, Lawrence D., \textit{Theory of Optimal Search}, New York: Academic Press, 1975.
+
+\bibitem{Stone75} Lawrence D. Stone, \textit{Theory of Optimal Search}, New York: Academic Press, 1975.
+
 \bibitem{LS} Lawrence D. Stone, Colleen M. Keller, Thomas M. Kratzke, Johan P. Strumpfer, \emph{``Search for the Wreckage of Air France Flight AF 447"}, Statistical Science 2014, Vol. 29, No. 1, 2014.
 \end{thebibliography}
 
