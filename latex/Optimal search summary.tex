@@ -9,6 +9,7 @@
 \usepackage{gensymb}
 \usepackage{listings}
 \usepackage{color}
+\usepackage[margin=1cm]{caption}
 \usepackage[margin=1in]{geometry}
 \usepackage{fancyhdr}
 
@@ -139,10 +140,10 @@ A Monte Carlo simulation was run over 15,000 iterations on three parameters of t
 \hline \textbf{Parameter} & \textbf{Description} & \textbf{Minimum} & \textbf{Maximum}\\\hline\hline
 $\alpha$ & Probability of success of one search & 0.2 & 0.5 \\\hline
 $i$ & Number of search iterations performed & 10 & 750 \\\hline
-$n$ & Number of ships used in search & 1 & 30 \\\hline\hline
+$n$ & Number of ships used in search & 1 & 25 \\\hline\hline
 \textbf{Output} & \textbf{Description} &&\\\hline
 $DT$ & Total distance traveled by all ships &&\\\hline
-$PS$ & Probability that the search has discovered the object &&\\\hline
+$PD$ & Probability that the search has discovered the object &&\\\hline
 $NS$ & Total number of searched cells &&\\\hline
 $CT$ & Computation time for model (in ms) &&\\\hline
 \end{tabular}\end{center}
@@ -163,13 +164,104 @@ It is worth noting that a grid resolution of 70 was chosen. As computation time 
 
 Additionally, the model is invariant under cell size. Each search iteration is not represented in the time used to search a cell, so the total work done in searching a cell is ``one unit.'' The conversion from the single unit work to time changes based on cell size, but is not modeled.
 
-Initial allocation was then performed on the ships in this distribution. This placed the $n$ ships in the grid according to the highest $\epsilon$ values. The probability distribution is then evolved assuming failure of search.
+Initial allocation was then performed on the ships in this distribution. This placed the $n$ ships in the grid according to the highest $\epsilon$ values. The probability distribution is then evolved assuming failure of search. 
 
 \begin{figure}[H]\begin{center}
 \includegraphics[scale=0.35]{../Matlab/Images/ModelSearch001.png}
 \includegraphics[scale=0.35]{../Matlab/Images/ModelSearch020.png}
 \includegraphics[scale=0.35]{../Matlab/Images/ModelSearch100.png}
+\caption{Prob. dist. of 15 ships after 1, 20, and 100 search iterations respectively.}
 \end{center}\end{figure}
+
+As can be seen, the probability of the object's presence in unsearched squares increases, and the probability in searched squares decreases. 
+
+The technology is considered to be functionally uniform. As is noted in section 2.2, the effectiveness of searching a square drops with the number of times the square has been searched. This is intuitively correct; because the square has been searched before, it is less likely to be successfully searched on the second iteration. As a consequence, $\beta$ decreases with search count. This can be seen in figure 4.
+
+\begin{figure}[H]\begin{center}
+\includegraphics[scale=0.5]{../Matlab/Images/After100SearchCount.png}
+\includegraphics[scale=0.5]{../Matlab/Images/After100SearchEffectiveness.png}
+\caption{Search count and $\beta$ values after 100 iterations with 15 ships.}
+\end{center}\end{figure}
+
+\subsection{Cost function analysis}
+
+The cost function as written above may appear arbitrary. To some extent, it is. However, it is effective at serving its purpose: to minimize the distance traveled by the ships with respect to the effectiveness of the overall search. In order to determine whether this cost functions serves its purpose well, two functions were compared. The first, $\gamma_{t1}(j,k)=1$, disregards distance traveled. The second, $\gamma_{t2}(j,k)=d_{\mbox{traveled}}$ uses the distance as a cost. What follows is an evolution of the two cost functions.
+
+\begin{figure}[H]\begin{center}
+\includegraphics[scale=0.45]{../Matlab/Images/SearchCountNoDist010.png}
+\includegraphics[scale=0.45]{../Matlab/Images/SearchCountDist010.png}
+\caption{Evolution comparison at 10 iterations}
+\end{center}\end{figure}
+
+After 10 iterations, the difference between $\gamma=1$ and $\gamma=d$ is apparent. In $\gamma=1$, ships have appeared and have searched in the lower portion of the search space. However, in $\gamma=d$, ships have remained near the first local maximum, frequently searching twice rather than moving somewhere else.
+
+\begin{figure}[H]\begin{center}
+\includegraphics[scale=0.45]{../Matlab/Images/SearchCountNoDist050.png}
+\includegraphics[scale=0.45]{../Matlab/Images/SearchCountDist050.png}
+\caption{Evolution comparison at 50 iterations}
+\end{center}\end{figure}
+
+After 50 iterations, $\gamma=1$ has evolved to the point where the lower maximum has been searched twice. This is the lowest search iteration (rounded to the nearest 10) for which this is true. By comparison, the $\gamma=d$ search regime has searched the upper maximum and surrounding area extensively, but has not moved from there. The next notable point occurs at 230 iterations.
+
+\begin{figure}[H]\begin{center}
+\includegraphics[scale=0.45]{../Matlab/Images/SearchCountNoDist230.png}
+\includegraphics[scale=0.45]{../Matlab/Images/SearchCountDist230.png}
+\caption{Evolution comparison at 230 iterations}
+\end{center}\end{figure}
+
+At 230 iterations, the $\gamma=d$ search regime has begun to scan the lower maximum. This is in contrast to the $\gamma=1$ regime, which has scanned the lower maximum significantly more thoroughly.
+
+The progression of the $\gamma=1$ regime matches the local maxima of the base probability in figure 2. Because $\gamma=1$, the value of $\epsilon$ merely follows: $$\epsilon = p(j)*\beta(j,k)$$
+
+Search vessels simply move to the places where the probability of discovering something is highest. This, naturally, roughly follows the original distribution map.
+
+\subsection{Effect of the $\gamma=d$ search regime}
+
+The $\gamma=d$ search regime does not leave its localized area until approximately five times later than the $\gamma=1$ regime. This is potentially unwanted behavior. 
+
+However, this is not the complete picture. To understand the significant role the cost function plays in the optimization process, one must look at the total distance traveled by ships:
+
+\begin{figure}[H]\begin{center}
+\begin{tabular}{|c|c|c|}
+\hline & $DT$ & $PD$\\\hline\hline
+$\gamma=1$ & 144902 & $45.7\%$\\\hline
+$\gamma=d$ & 3809 & $43.8\%$\\\hline
+\end{tabular}
+\caption{DT: Distance Traveled (cells); PD: Probability of Discovery}
+\end{center}\end{figure}
+
+The difference here is profound. Without optimizing for distance, the distance the ships travel is $\approx 38$ times that of $\gamma=d$. The gain in effectiveness is only $1.9\%$. Therefore, by sacrificing roughly two percent of our distance movement, we gain a 38-fold reduction in distance traveled.
+
+\subsection{Sensitivity analysis of $PD$}
+
+One of the most critical components of the model is the probability that the search has discovered the object. It is important to understand how this probability varies with the model inputs. In order to evaluate this, the data from the Monte Carlo simulation was passed through a logarithmic fit.
+
+\begin{figure}[H]\begin{center}
+\includegraphics[scale=0.5]{../Matlab/Images/LogSearchIterPctSuccessMSE0.png}
+\includegraphics[scale=0.5]{../Matlab/Images/LogShipCtPctSuccessMSE0.png}
+\caption{Log fit lines in blue; Search iter fit line: $-0.4809+0.3304*log_{10}(x)$; Ship iter fit line: $-0.0142+0.3433*log_{10}(x)$}
+\end{center}\end{figure}
+
+Two notes about these graphs: first, the number of ships is a discrete quantity between 1 and 25. The number of search iterations is discrete as well, though fine enough to appear continuous. Second, the mean squared error on both graphs is $< 0.02$.
+
+It is clear that the percent success provides diminishing returns as iteration count increases, and as number of ships increases. The limiting factor here is the $\beta$ function - as the total number of searches goes up, the returns decrease on the whole.
+
+Combined, these two form the primary distribution indicating the success of the search:
+
+\begin{figure}[H]\begin{center}
+\includegraphics[scale=0.75]{../Matlab/Images/PctSuccessByItersShips.png}
+\caption{Histogram of the probability of success. Vertical noise is partially a result of interpolation and partially a result of $\alpha$ distributions.}
+\end{center}\end{figure}
+
+This histogram suggests that the contour lines of the probability success graph are of the form $\frac 1x$. Additionally, this map shows that the net probability is likely of the form $\log(n*i)$, where $n$ is the number of ships used and $i$ is the number of iterations performed (as in Figure 1).
+
+The coefficients of the logarithmic fits suggest that this is true: the coefficient with respect to ships used is $0.3433$, and the coef. with respect to iterations is $0.3304$. This is a $3.76\%$ difference. The only significant difference lies in the intercept of the functions. However, the growth rate of the functions is the same.
+
+This makes intuitive sense. The total number of searches is equal to $n*i$, and a relatively logarithmic limit is expected. While the distribution must taper off to $1$, and cannot proceed to $\infty$, it is locally logarithmic.
+
+\subsection{Sensitivity of Distance Traveled}
+
+
 
 \pagebreak
 
