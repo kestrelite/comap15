@@ -14,7 +14,7 @@
 \usepackage[margin=1in]{geometry}
 \usepackage{fancyhdr}
 
-\title{Debris-Informed Underwater Search and Rescue Optimized in Two Parts}
+\title{Optimal Debris-Informed Search for a Lost Plane}
 \author{}
 \date{}
 
@@ -39,30 +39,28 @@
 \begin{document}\maketitle
 
 \begin{abstract}
-A model for optimal discrete-effort search for a plane lost in open ocean is presented. A pre-existing ocean current model is assumed to generate probability distributions for debris and the plane body in the search area. The search region is split into smaller cells. An aerial search for debris is then executed. The probability distribution for the location of the plane body on the seafloor is then modified by the current model using a statistical transformation on the data. Searches underwater are then optimized with respect to chance of discovery and search cost. Two search cost functions are compared. Both searches are generalized with respect to the search technology used. A measure of the efficiency of search technologies is referenced and assumed to be given by other research. In this way, the model is generalized with respect to search technology used; any technology will work. Results of test runs demonstrate a logarithmic relationship between percent success and both quantity of search vehicles as well as quantity of searches. The computational cost of the model is estimated at $O(n)$ with respect to both quantity of search iterations and quantity of search vehicles. A comparison is made between a simulation that optimizes cost as a function of distance and one that does not. This comparison reveals that optimizing the travel distance may reduce total distance traveled by up to a factor of 38 while only marginally sacrificing total search effectiveness.
+A model for optimal discrete-effort search for a plane lost in open ocean is presented. A pre-existing ocean current model is assumed to generate probability distributions for both debris and the plane body in the search area. The search region is split into smaller cells. An aerial search for debris is then executed. The probability distribution for the location of the plane body on the seafloor is then modified by the ocean current model using a statistical transformation on the data. Searches underwater are then optimized with respect to chance of discovery and search cost. Two search cost functions are compared. Both searches are generalized with respect to the search technology used. A measure of the efficiency of search technologies is referenced and assumed to be given by other research. In this way, the model is generalized so that any search technology may be used. Results of test runs demonstrate a logarithmic relationship between percent success, quantity of search vehicles, and quantity of searches. The computational cost of the model is estimated at $O(n)$ with respect to both quantity of search iterations and quantity of search vehicles. Additionally, a comparison is made between a simulation that optimizes cost as a function of distance and one that does not optimize cost. This comparison reveals that optimizing the travel distance may reduce total distance traveled by up to a factor of 38 while only marginally sacrificing total search effectiveness.
 \end{abstract}
 
 \pagebreak 
 
 \section{Introduction}
 
-The expansion of air travel will lead to the occasional and inevitable ocean plane crash. In order to maximize the chance of successful recovery, it is important to have a working model on-hand for how to best execute such a search. 
+The expansion of air travel will lead to the occasional and inevitable oceanic plane crash. In order to maximize the chance of successful recovery, it is important to have a working model on-hand for how to best execute a search. 
 
 This paper contains a discussion of an optimal search for a missing object based on a probabilistic distribution. It has been generalized to the point where any available search technology may be included, and any type of aircraft may be sought.
 
-However, specific technologies are not modeled in this paper. It is assumed that, through other research and testing, relatively accurate models for the detection rate of the search technologies used have been acquired. Additionally, it is presupposed that a model exists for current that will allow for both backward and forward tracking. Existing research suggests such a model exists.
+However, specific technologies are not modeled in this paper. It is assumed that, through other research and testing, relatively accurate models for the detection rate of the search technologies used have been acquired. Additionally, it is presupposed that a model exists for current that will allow for both backward and forward tracking. Existing research suggests such a model exists [3].
 
-As a result, three abstractions have been achieved. First, an abstraction with respect to the physical search space: the current model(s) return a probability distribution for debris across the surface of the water and for the position of the aircraft on the seafloor. 
+As a result, three abstractions have been achieved. First, an abstraction with respect to the physical search space. The current model(s) return a probability distribution for debris across the surface of the water and for the position of the aircraft on the seafloor. 
 
-Secondly, there is an abstraction with respect to the search technology used: the detection rate of this technology in locating an object is given by previous research. Specific search technologies are not included in this paper for two reasons: the state of the art advances quickly, and rigorous testing with equipment is needed to determine these values. 
+Secondly, there is an abstraction with respect to the search technology used. The detection rate of this technology in locating an object is given by previous research. Specific search technologies are not included in this paper for two reasons: the state of the art advances quickly, and rigorous testing with equipment is needed to determine these values. 
 
-Thirdly, there is an abstraction with respect to the type of fallen plane. This is done in the same way as the abstraction with respect to search technology. This abstraction is, in this context, the percent chance that a search technology will detect a particular object. The chance will change with both the object type and the search technology used.
-
-\input{NSS_ScratchWork.tex}
+Thirdly, there is an abstraction with respect to the type of fallen plane. This is done in the same way as the abstraction with respect to search technology. This abstraction correlates to, in this context, the percent chance that a search technology will detect a particular object. The chance will change with both the object type and the search technology used.
 
 \section{General Discrete-effort Optimal Searching}
 
-A modified discrete-effort method derived Lawrence Stone's \textit{Theory of Optimal Search} is used in both searches to prioritize and distribute search efforts. An overview of this method is provided here. 
+A modified discrete-effort method derived from L.D. Stone's \textit{Theory of Optimal Search} is used in both searches to prioritize and distribute search efforts. An overview of this method is provided here. 
 
 \subsection{Defining the Terms Used in Searching}
 
@@ -78,21 +76,21 @@ Finally, $\beta_t(j,k)$ is the probability of locating an object in cell $j$ usi
 
 The quantity $p(j)\beta(j,k)$ represents the actual chance of finding debris in the $j$th cell on the $k^{th}$ search. $\beta$ assumes the object is in the current cell being searched, where the product $\beta * p$ does not assume so.
 
-Next, the optimization problem is stated. The optimal individual cell to focus the search methods on is the one which provides the highest chance of success per unit search cost. This value, denoted as $\epsilon$, is defined as $$\epsilon_t\equiv\epsilon_t(j,k)=\frac{p(j)\beta_t(j,k)}{\gamma_t(j,k)}$$. 
+The optimized term is: $$\epsilon_t\equiv\epsilon_t(j,k)=\frac{p(j)\beta_t(j,k)}{\gamma_t(j,k)}$$. 
 
-An $\epsilon$ can be computed for each cell, accounting for the number of searches $k$ for each one. The highest values are the ones with the greatest probability of success per unit cost. 
+An $\epsilon$ can be computed for each cell. The highest values of $\epsilon$ indicate the cells with the greatest probability of success per unit cost. 
 
-\subsection{Assigning Values to $\beta_t(j,k)$}
+\subsection{An Expression for $\beta_t(j,k)$}
 
-Suppose $\alpha_t$ is the success rate for locating an object, whether underwater or aerial, with $t\in\mathcal{T}$. Then, from \textit{Theory of Optimal Search}: \[\beta_t(j,k)=\alpha_t\cdot(1-\alpha_t)^{k-1}\]
+Suppose $\alpha_t$ is the success rate for locating an object, whether underwater or aerial, with $t\in\mathcal{T}$. Then, from \textit{Theory of Optimal Search} by L.D. Stone: \[\beta_t(j,k)=\alpha_t\cdot(1-\alpha_t)^{k-1}\]
 
-This representation follows that each successive search has an exponentially decreasing chance of success. The derivation is not copied here. It is worth noting, however, that the $\alpha_t$ value will significantly depend on the technology used and the context within the model is applied.
+This representation follows that each successive search has an exponentially decreasing chance of success. The derivation is not copied here. The $\alpha_t$ value will significantly depend on the search technology used as well as the search area within which the model is applied.
 
 \subsection{Cost Functions as Prioritization}
 
 The cost $\gamma_t(j,k)$ provides flexibility for the model in terms of prioritization. Considerations such as distance, time, and money may be confounding variables in the cost of searching. The resulting function $\gamma$ will depend entirely on the technology being used. In this model, the cost of searching a cell is assumed to be equal to the distance traveled to reach the cell. In this way, distance, travel time, and monetary cost are roughly minimized.
 
-In this model, the distance parameter in the cost of the function, such that $\gamma_t(j,k)=d_{travel}$, where $d_{travel}$ is the Euclidean distance in cells from the current position to the position under consideration. This has the benefit of moving ships around as little as possible. One may extend the cost function by including the time to search - in other words, $\gamma(j,k)=t_{search}+d_{travel}$. The inclusion of travel time implies specifying the technology to be used, however; as a result, this method of prioritization is not included here.  
+In this model, the distance parameter in the cost of the function, such that $\gamma_t(j,k)=d_{travel}$, where $d_{travel}$ is the Euclidean distance from the current position to the position under consideration. This has the benefit of moving ships around as little as possible. One may extend the cost function by including the time to search - in other words, $\gamma(j,k)=t_{search}+d_{travel}$. The inclusion of travel time implies specifying the technology to be used, however; as a result, this method of prioritization is not included here.  
 
 \subsection{Evolving Probability Distributions over Failed Searches}
 
@@ -100,25 +98,25 @@ In the event that the model does not find an object in cell $k$, the probability
 $$P(T|F)=\frac{P(T)P(F|T)}{P(F)}$$ 
 $$P(T|\sim F)=\frac{p(j)[1-\beta_t(j,k)]}{(p(j)[1-\beta_t(j,k)]+(1-p(j))}$$
 
-By reduction, the posterior probability that the object is there but was not found is: $$p'(j)=p(j)\frac{1-\beta_t(j,k)}{1-\beta_t(j,k)p(j)},\;\mbox{where }j\mbox{ is searched}$$.
+(The intermediate steps have been omitted.) By reduction, the posterior probability that the object is there but was not found is: $$p'(j)=p(j)\frac{1-\beta_t(j,k)}{1-\beta_t(j,k)p(j)},\;\mbox{where }j\mbox{ is searched}$$.
 
 The posterior probability of every other square can be similarly adjusted by the knowledge that an object was not discovered in cell $k$ (though its proof is omitted): $$p'(j)=p(j)\frac{1}{1-p(j)\beta_t(j,k)},\;\mbox{where }j\mbox{ is not searched.}$$
 
 After the application of these transformations, as $p'$ is a probability distribution, the quantity $$\sum_{j\in\mathcal{J}}p'(j) = 1$$
 
-(The notation here may be confusing. For clarification, the first $p'(j)$ adjustment applies only to the square that was searched; the second applies to every other square.)
+(For clarification, the first $p'(j)$ adjustment applies only to the square that was searched; the second applies to every other square.)
 
-After a failed search, the probability of the plane being in cell $j$ becomes this probability.
+After a failed search, the probability $p(j)$ for the next search iteration becomes the probability $p'(j)$.
 
 \subsection{Executing the Search Method}
 
-Suppose there is a set $\mathcal{T}$ of search technologies and $n_t$ instances of technology $t\in\mathcal{T}$. For each device, the $\epsilon$ value is computed. Optimizing this value returns the highest probability of object discovery per unit cost.
+For each search technology $t\in\mathcal{T}$, the $\epsilon_t$ value is computed. Optimizing this value returns the highest probability of object discovery per unit cost.
 
-Each device is allocated sequentially to a square that is a) not already being searched, and b) has the highest $\epsilon$ value for that technology. Should two devices conflict in their optimal square, the closest device of that type claims it. Though travel time is not modeled, it is reasonable to make preliminary decisions in deference to it.
+Each device is allocated sequentially to a square that is a) not already being searched, and b) has the highest $\epsilon$ value for that technology. 
 
-Whenever a device finishes searching, the probability distribution of the object's position is recomputed according to the above transformation, the device's $\epsilon$ value is recomputed based on the new distribution, and it is assigned to a new cell.
+Whenever a device finishes searching, two calculations are made. First, the probability distribution of the sought object is recomputed according to $p'(j)$. Second, the device's $\epsilon_t$ value is recomputed based on the new $p$-distribution. Then, it is assigned to a new cell.
 
-The net success is the cumulative product of $p_t(j)*\beta_t(j,k)$. Suppose $f_t(j)$ is the total number of searches allocated to cell $j$. Then, the net probability that the plane has been discovered by a single technology can thus be expressed as: $$\sum p_t(j)\beta_t(j,f_t(j))$$
+The total chance of success is the cumulative product of $p_t(j)*\beta_t(j,k)$. Suppose $f_t(j)$ is the total number of searches allocated to cell $j$. Then, the net probability that the plane has been discovered by a single technology can thus be expressed as: $$\sum_{j\in\mathcal{J}}\left(p_t(j)\sum_{k=0}^{f_t(j)}\beta_t(j,k)\right)$$
 
 \input{assumptions_file.tex}
 
@@ -146,18 +144,20 @@ Autonomous underwater vehicles will follow the general search method previously 
 
 \section{Model Analysis}
 
-A Monte Carlo simulation was run over 15,000 iterations on three parameters of the model, with $\alpha$, $i$, and $n$ as parameters (see Figure 1). It was additionally assumed that only one technology is used for the duration of the search. Extension into multiple technologies is fully possible, but was not done during this Monte Carlo simulation in order to isolate the general search dynamics.
+A Monte Carlo simulation [4] was run over 15,000 iterations on three parameters of the model, with $\alpha$, $i$, and $n$ as parameters (see Figure 1). It was additionally assumed that only one technology is used for the duration of the search. Extension into multiple technologies is fully possible, but was not done during this Monte Carlo simulation in order to isolate the general search dynamics.
 
 \begin{figure}[H]\begin{center}\begin{tabular}{|c|c|c|c|}
 \hline \textbf{Parameter} & \textbf{Description} & \textbf{Minimum} & \textbf{Maximum}\\\hline\hline
 $\alpha$ & Probability of success of one search & 0.2 & 0.5 \\\hline
 $i$ & Number of search iterations performed & 10 & 750 \\\hline
-$n$ & Number of ships used in search & 1 & 25 \\\hline\hline
-\textbf{Output} & \textbf{Description} &&\\\hline
-$DT$ & Total distance traveled by all ships &&\\\hline
-$PD$ & Probability that the search has discovered the object &&\\\hline
-$NS$ & Total number of searched cells &&\\\hline
-$CT$ & Computation time for model (in ms) &&\\\hline
+$n$ & Number of ships used in search & 1 & 25 \\\hline
+\end{tabular}\vspace{5pt}
+\begin{tabular}{|c|c|}
+\hline\textbf{Output} & \textbf{Description} \\\hline\hline
+$DT$ & Total distance traveled by all ships \\\hline
+$PD$ & Probability that the search has discovered the object\\\hline
+$NS$ & Total number of searched cells\\\hline
+$CT$ & Computation time for model (in ms)\\\hline
 \end{tabular}\end{center}
 \caption{Table of parameters and collected outputs.}
 \end{figure}
@@ -166,7 +166,7 @@ These values were selected around a range which has been conducted in the past. 
 
 In order to fully observe the dynamics of the search, all cell searches are assumed to have failed. This is simply a consequence of the fact that if the search had succeeded, it would have stopped. The goal is to observe dynamics.
 
-The probability distribution used for input was intentionally designed to have several local maxima at varying heights. The probability distribution used is also continuous everywhere, though is not continuous past the first search iteration. The surface used is represented by $$|\mbox{peaks(70)}|\div \sum_j |\text{peaks(70)}|$$
+The probability distribution used for input was intentionally designed to have several local maxima at varying heights, as shown in Figure 2. The probability distribution used is also continuous everywhere, though is not continuous past the first search iteration. The surface used is represented by $$|\mbox{peaks(70)}|\div \sum_j |\text{peaks(70)}|$$
 
 where \texttt{peaks} is the MatLab ``peaks'' function.
 
@@ -176,11 +176,11 @@ where \texttt{peaks} is the MatLab ``peaks'' function.
 \caption{Probability distribution used in Monte Carlo simulation}
 \end{center}\end{figure}
 
-It is worth noting that a grid resolution of 70 was chosen. As computation time increases with the square of grid size, a sufficiently low value was chosen for computation which simultaneously allowed for sufficiently high resolution. 
+It is worth noting that a grid resolution of 70 was chosen. As computation time increases with the square of grid size, a sufficiently low value was chosen which simultaneously provided sufficiently high resolution and which was also reasonably computable. 
 
-Additionally, the model is invariant under cell size. Each search iteration is not represented in the time used to search a cell, so the total work done in searching a cell is ``one unit.'' The conversion from the single unit work to time changes based on cell size, but is not modeled.
+Additionally, as $\alpha$ is constant and $d_{travel}$ is expressed in cell count, the model is invariant under cell size. Each search iteration is not represented in the time used to search a cell, so the total work done in searching a cell is ``one unit.'' The conversion from the single unit work to time changes based on cell size, but is not modeled.
 
-Initial allocation was then performed on the ships in this distribution. This placed the $n$ ships in the grid according to the highest $\epsilon$ values. The probability distribution is then evolved assuming failure of search. 
+Initial allocation was then performed on the ships in this distribution. This placed the $n$ ships in the grid according to the highest $\epsilon$ values. The probability distribution is then evolved assuming failure of search. This evolution is demonstrated in Figure 3. 
 
 \begin{figure}[H]\begin{center}
 \includegraphics[scale=0.35]{../Matlab/Images/ModelSearch001.png}
@@ -189,9 +189,9 @@ Initial allocation was then performed on the ships in this distribution. This pl
 \caption{Prob. dist. of 15 ships after 1, 20, and 100 search iterations respectively.}
 \end{center}\end{figure}
 
-As can be seen, the probability of the object's presence in unsearched squares increases, and the probability in searched squares decreases. 
+As can be seen, the probability of locating the object in unsearched squares increases while the probability in searched squares decreases. 
 
-The technology is considered to be functionally uniform. As is noted in section 2.2, the effectiveness of searching a square drops with the number of times the square has been searched. This is intuitively correct; because the square has been searched before, it is less likely to be successfully searched on the second iteration. As a consequence, $\beta$ decreases with search count. This can be seen in figure 4.
+The technology is considered to be functionally uniform. As is noted in Section 2.2, the effectiveness of searching a square drops with the number of times the square has been searched. This is intuitively correct; because the square has been searched before, it is less likely to be successfully searched on the second iteration. As a consequence, $\beta$ decreases with search count. This can be seen in Figure 4.
 
 \begin{figure}[H]\begin{center}
 \includegraphics[scale=0.5]{../Matlab/Images/After100SearchCount.png}
@@ -201,7 +201,7 @@ The technology is considered to be functionally uniform. As is noted in section 
 
 \subsection{Cost function analysis}
 
-The cost function as written above may appear arbitrary. To some extent, it is. However, it is effective at serving its purpose: to minimize the distance traveled by the ships with respect to the effectiveness of the overall search. In order to determine whether this cost functions serves its purpose well, two functions were compared. The first, $\gamma_{t1}(j,k)=1$, disregards distance traveled. The second, $\gamma_{t2}(j,k)=d_{\mbox{traveled}}$ uses the distance as a cost. What follows is an evolution of the two cost functions.
+The cost function as written above may appear arbitrary. To a certain extent it is, but is also effective at minimizing the distance traveled by the ships with respect to the effectiveness of the overall search. In order to measure the practicality of this cost function, two functions were compared. The first in Figure 5, $\gamma_{t1}(j,k)=1$, disregards distance traveled. The second, $\gamma_{t2}(j,k)=d_{\mbox{traveled}}$ considers the distance as a cost. Figure 5 compares these two functions.
 
 \begin{figure}[H]\begin{center}
 \includegraphics[scale=0.45]{../Matlab/Images/SearchCountNoDist010.png}
@@ -217,7 +217,7 @@ After 10 iterations, the difference between $\gamma=1$ and $\gamma=d$ is apparen
 \caption{Evolution comparison at 50 iterations}
 \end{center}\end{figure}
 
-After 50 iterations, $\gamma=1$ has evolved to the point where the lower maximum has been searched twice. This is the lowest search iteration (rounded to the nearest 10) for which this is true. By comparison, the $\gamma=d$ search regime has searched the upper maximum and surrounding area extensively, but has not moved from there. The next notable point occurs at 230 iterations.
+As shown in Figure 6, after 50 iterations, $\gamma=1$ has evolved to the point where the lower maximum has been searched twice. This is the lowest search iteration (rounded to the nearest 10) for which this is true. By comparison, the $\gamma=d$ search regime has searched the upper maximum and surrounding area extensively, but has not moved from there. The next notable point occurs at 230 iterations shown in Figure 7.
 
 \begin{figure}[H]\begin{center}
 \includegraphics[scale=0.45]{../Matlab/Images/SearchCountNoDist230.png}
@@ -231,11 +231,11 @@ The progression of the $\gamma=1$ regime matches the local maxima of the base pr
 
 Search vessels simply move to the places where the probability of discovering something is highest. This, naturally, roughly follows the original distribution map.
 
-\subsection{Effect of the $\gamma=d$ search regime}
+\subsection{Effect of the $\gamma=d$ search method}
 
 The $\gamma=d$ search regime does not leave its localized area until approximately five times later than the $\gamma=1$ regime. This is potentially unwanted behavior. 
 
-However, this is not the complete picture. To understand the significant role the cost function plays in the optimization process, one must look at the total distance traveled by ships:
+However, to understand the significant role that the cost function plays in the optimization process, one must look at the total distance traveled by ships:
 
 \begin{figure}[H]\begin{center}
 \begin{tabular}{|c|c|c|}
@@ -246,21 +246,21 @@ $\gamma=d$ & 3809 & $43.8\%$\\\hline
 \caption{DT: Distance Traveled (cells); PD: Probability of Discovery}
 \end{center}\end{figure}
 
-The difference here is profound. Without optimizing for distance, the distance the ships travel is $\approx 38$ times that of $\gamma=d$. The gain in effectiveness is only $1.9\%$. Therefore, by sacrificing roughly two percent of our distance movement, we gain a 38-fold reduction in distance traveled.
+The difference here is profound. Without optimizing for distance, the distance the ships travel is $\approx 38$ times that of $\gamma=d$. The gain in effectiveness is only $1.9\%$.
 
 \subsection{Sensitivity analysis of $PD$}
 
-One of the most critical components of the model is the probability that the search has discovered the object. It is important to understand how this probability varies with the model inputs. In order to evaluate this, the data from the Monte Carlo simulation was passed through a logarithmic fit.
+One of the most critical components of the model is the probability that the search has discovered the object. It is important to understand how this probability is affected by model parameter values. In order to evaluate this, the data from the Monte Carlo simulation was passed through a logarithmic fit in Figure 9.
 
 \begin{figure}[H]\begin{center}
 \includegraphics[scale=0.5]{../Matlab/Images/LogSearchIterPctSuccessMSE0.png}
 \includegraphics[scale=0.5]{../Matlab/Images/LogShipCtPctSuccessMSE0.png}
-\caption{Log fit lines in blue; Search iter fit line: $-0.4809+0.3304*log_{10}(x)$; Ship iter fit line: $-0.0142+0.3433*log_{10}(x)$}
+\caption{Log fit lines in blue; Search iterations fit line: $-0.4809+0.3304*log_{10}(x)$; Number of ships fit line: $-0.0142+0.3433*log_{10}(x)$}
 \end{center}\end{figure}
 
-Two notes about these graphs: first, the number of ships is a discrete quantity between 1 and 25. The number of search iterations is discrete as well, though fine enough to appear continuous. Second, the mean squared error on both graphs is $< 0.02$.
+Two observations can be taken from these graphs. First, the number of ships is a discrete quantity between 1 and 25 and the number of search iterations is discrete as well, though fine enough to appear continuous. Second, the mean squared error on both graphs is $< 0.02$.
 
-It is clear that the percent success provides diminishing returns as iteration count increases, and as number of ships increases. The limiting factor here is the $\beta$ function - as the total number of searches goes up, the returns decrease on the whole.
+It is clear that the percent success provides diminishing returns as both iteration count and number of ships increases. The limiting factor here is the $\beta$ function - as the total number of searches goes up, the returns decrease on the whole.
 
 Combined, these two form the primary distribution indicating the success of the search:
 
@@ -271,9 +271,9 @@ Combined, these two form the primary distribution indicating the success of the 
 
 This histogram suggests that the contour lines of the probability success graph are of the form $\frac 1x$. Additionally, this map shows that the net probability is likely of the form $\log(n*i)$, where $n$ is the number of ships used and $i$ is the number of iterations performed (as in Figure 1).
 
-The coefficients of the logarithmic fits suggest that this is true: the coefficient with respect to ships used is $0.3433$, and the coef. with respect to iterations is $0.3304$. This is a $3.76\%$ difference. The only significant difference lies in the intercept of the functions. However, the growth rate of the functions is the same.
+The coefficients of the logarithmic fits suggest that this is true: the coefficient with respect to ships used is $0.3433$, and the coefficient with respect to iterations is $0.3304$. This merely is a $3.76\%$ difference. The only significant difference lies in the intercept of the functions. However, the growth rate of the functions is the same.
 
-This makes intuitive sense. The total number of searches is equal to $n*i$, and a relatively logarithmic limit is expected. While the distribution must taper off to $1$, and cannot proceed to $\infty$, it is locally logarithmic.
+This makes intuitive sense. The total number of searches is equal to $n*i$, and a relatively logarithmic limit is expected as the usefulness of future searches must taper off.
 
 \subsection{Sensitivity of Distance Traveled}
 
@@ -306,24 +306,24 @@ The computation time is visibly linear with respect to search iterations and shi
 \caption{Computation time as linear with respect to iteration count.}
 \end{center}\end{figure}
 
-This implies that the model operates in $O(n*i)$, where $n$ is the number of vessels and $i$ is the number of iterations.
+This implies that the model operates in $O(n)$ with respect to both the number of searching vessels and number of search iterations. This also makes intuitive sense. There is a constant number of searches performed per iteration if the number of search vessels is constant. There is additionally a constant number of searches performed per vessel if the number of search iterations is held constant.
 
 \subsection{Anomalous behavior of $\alpha$ values}
 
 The sensitivity of $\alpha$ has been deferred to this section because its behavior is highly anomalous in comparison to the other model behaviors. A summary of the results of $\alpha$ are included here. Specific dynamics of $\alpha$ are not investigated in this paper.
 
-The first dynamic to highlight is the odd independence of $\alpha$ on $PD$, shown in figure 14. The distribution of $PD$ over $\alpha$ appears to be relatively uniform; however, there is visibly higher density toward the bottom left and upper right. Additionally, there is an odd behavior pattern wherein the success rate seems to fall off once $\alpha$ grows sufficiently large. 
+The first dynamic to highlight is the odd independence of $\alpha$ on $PD$, shown in Figure 14. The distribution of $PD$ over $\alpha$ appears to be relatively uniform; however, there is visibly higher density toward the bottom left and upper right. Additionally, there is an odd behavior pattern wherein the success rate seems to fall off once $\alpha$ grows sufficiently large. 
 
 \begin{figure}[H]\begin{center}
 \includegraphics[scale=0.3]{../Matlab/Images/PctSuccessByAlpha.png}
-\caption{Distribution of $\alpha$ versus the percent success rate}
+\caption{Distribution of $\alpha$ ($x$-axis) versus the percent success rate ($y$-axis)}
 \end{center}\end{figure}
 
 In order to investigate this behavior further, a moving average was taken of $\alpha$ verses $PD$:
 
 \begin{figure}[H]\begin{center}
 \includegraphics[scale=.5]{../Matlab/Images/MovAvgAlphaPctSuccess.png}
-\caption{A moving average of $\alpha$ versus the percent rate with smoothing 100 (over 15000 data points).}
+\caption{A moving average of $\alpha$ ($x$-axis) versus the percent discovery rate ($y$-axis) with smoothing 100 (over 15000 data points).}
 \end{center}\end{figure}
 
 This seems to indicate that, for an $\alpha$ around 0.28, the search success does not suffer, but it seems to begin to suffer slightly past another $\alpha$ around 0.43. However, this is a purely qualitative assessment, and does not represent any statistical measurement.
@@ -334,22 +334,24 @@ Nevertheless, $\alpha$ is sufficiently linear over the operating range of values
 
 There are several areas of future study. The first is, of course, $\alpha$ dynamics. It is necessary to understand how the $\alpha$ value impacts the model. For now, however, it is sufficient to assume that the $\alpha$ value does not have a considerable impact on the net search outcome. 
 
-Additionally, there is one chart which has a yet-unexplained anomaly in figure 16:
+Additionally, there is one chart which has a yet-unexplained anomaly in Figure 16:
 
 \begin{figure}[H]\begin{center}
 \includegraphics[scale=0.75]{../Matlab/Images/CompTimePctSuccess.png}
 \caption{Odd dynamics exhibited by computational time and percent success}
 \end{center}\end{figure}
 
-The computational time follows a strongly logarithmic plot in the normal case, but there are two locations where this does not hold. The first set of points appears above the obvious logarithmic boundary (which is not currently characterized). These points may very well be computational anomalies, but it is worth investigating to see whether they are truly anomalous or if they are indicative of a better-than-average case. There is a chance - albeit a small one - that they \textit{do} represent a better-than-average case that can be characterized. 
+The computational time follows a logarithmic plot in the normal case, but there are two locations where this does not hold. The first set of points appears above the obvious logarithmic boundary (which is not currently characterized). These points may very well be computational anomalies, but it is worth investigating to see whether they are truly anomalous or if they are indicative of a better-than-average case. There is a chance - albeit a small one - that they \textit{do} represent a better-than-average case that can be characterized. 
 
-Additionally, a second unexplained behavior occurs around 3000 msec. The underside of the graph begins to expand outward - but it suddenly converges again in with the main path around 3000 msec. The cause of this is unknown, and this behavior is as yet uncharacterized. 
+Additionally, a second unexplained behavior occurs around 3000 msec. The underside of the graph begins to expand outward, but then suddenly converges again in with the main path around 3000 msec. The cause of this is unknown, and this behavior is as yet uncharacterized. 
 
 Finally, additional probability distributions would need to be studied in order to reach a definitive conclusion about the model dynamics.
 
-\pagebreak
+\pagebreak \section*{Appendix A - Index of Variables and Parameters}
 
-\begin{thebibliography}{10}
+\input{NSS_ScratchWork.tex}
+
+\pagebreak \begin{thebibliography}{10}
 \bibitem{TF} T. Furukawa, F. Bourgault, B. Lavis, H.F. Durrant-Whyte, \emph{``Recursive Bayesian Search-and-Tracking Using Coordinated UAVs for Lost Targets"}, IEEE International Conference on Robotics and Automation, 2006. 
 
 \bibitem{JA} \emph{``Search for MH370 Facts and statistics Surface search of the southern Indian Ocean 17 March–28 April 2014''}, Joint Agency Coordination Centre, \\http://www.jacc.gov.au/search/files/MH370\_Facts\_and\_statistics-Surface\_search\_of\_the\\\_southern\_Indian\_Ocean, PDF.
