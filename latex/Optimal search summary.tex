@@ -7,6 +7,7 @@
 \usepackage{float}
 \usepackage{textcomp}
 \usepackage{gensymb}
+\usepackage{lastpage}
 \usepackage{listings}
 \usepackage{color}
 \usepackage[margin=1cm]{caption}
@@ -21,7 +22,7 @@
 \pagestyle{fancy}
 \fancyhf{}
 \lhead{Team 40670}
-\rhead{Page \thepage\, of ***}
+\rhead{Page \thepage\, of \pageref{LastPage}}
 
 \definecolor{dkgreen}{rgb}{0,0.6,0}
 \definecolor{gray}{rgb}{0.5,0.5,0.5}
@@ -38,7 +39,7 @@
 \begin{document}\maketitle
 
 \begin{abstract}
-A model for optimal discrete-effort search for a plane lost in open ocean is presented. A pre-existing ocean current model is assumed to generate probability distributions for debris and the plane body in the search area. The search region is split into smaller cells. An aerial search is then executed for debris. The probability distribution for the location of the plane body on the seafloor is then modified by the current model using a statistical transformation on the data. Searches underwater are then optimized with respect to chance of discovery and search cost. Two search cost functions are compared. Both searches are generalized with respect to the search technology used. A measure of the efficiency of search technologies is referenced and assumed to be given by other research. In this way, the model is generalized with respect to search technology used; any technology will work. Results of test runs demonstrate a logarithmic relationship between percent success and both quantity of search vehicles as well as quantity of searches. The computational cost of the model is estimated at $O(n)$ with respect to both quantity of search iterations and quantity of search vehicles. A comparison is made between a simulation that optimizes cost, which is expressed as a function of total search vehicle travel distance, and one that does not. This comparison revealed that optimizing the travel distance may reduce total distance traveled by up to a factor of 38 while only marginally sacrificing total search effectiveness.
+A model for optimal discrete-effort search for a plane lost in open ocean is presented. A pre-existing ocean current model is assumed to generate probability distributions for debris and the plane body in the search area. The search region is split into smaller cells. An aerial search for debris is then executed. The probability distribution for the location of the plane body on the seafloor is then modified by the current model using a statistical transformation on the data. Searches underwater are then optimized with respect to chance of discovery and search cost. Two search cost functions are compared. Both searches are generalized with respect to the search technology used. A measure of the efficiency of search technologies is referenced and assumed to be given by other research. In this way, the model is generalized with respect to search technology used; any technology will work. Results of test runs demonstrate a logarithmic relationship between percent success and both quantity of search vehicles as well as quantity of searches. The computational cost of the model is estimated at $O(n)$ with respect to both quantity of search iterations and quantity of search vehicles. A comparison is made between a simulation that optimizes cost as a function of distance and one that does not. This comparison reveals that optimizing the travel distance may reduce total distance traveled by up to a factor of 38 while only marginally sacrificing total search effectiveness.
 \end{abstract}
 
 \pagebreak 
@@ -125,15 +126,15 @@ Existing ocean current models are sufficient for determining approximately where
 
 A current model is assumed to generate two probability distributions: the first is the distribution of debris, and the second is the positional distribution of the plane. The debris distribution is $p_d(j)$ (for $j\in\mathcal{J}$). The plane's positional distribution is considered naive at the outset, as it is not yet informed by the position of debris. The naive positional distribution is $p_n(j)$. 
 
-Additionally, it is expected that the current model be able to adjust the positional probability of the plane based on the originating point of the debris. This is expressed with the operator $\mathtt{T}$. This will be defined later. 
-
 The first step in this model for object search is to perform an aerial debris search. 
 
-Planes will search through cells in a manner specified by the general optimal search model. The highest discovery rate to cost ratio will be investigated first, then each other cell sequentially.
+Planes will search through cells in a manner specified by the general optimal search model. The highest discovery rate to cost ratio will be investigated first, then each other cell sequentially. It is assumed that there either is or is not debris in a cell. Therefore, the presence of debris at cell $j$ is $d_j\in \{0,1\}$.  
 
-The presence of debris at cell $j$ is $d_j\in \{0,1\}$. It is assumed that there either is or is not debris in a cell. If debris is present, then $\mathtt{T}$ modifies the probability distribution $p_n$ in order to represent the likelihood that debris came from a plane crash. This is expressed as: $$\mathtt{T}(d_j,p_n)=p_n'$$
+It is expected that the current model be able to adjust the positional probability of the plane based on the originating point of the debris. If debris is present, the probability distribution $p_n$ is modified in order to represent the likely positions where the plane must have hit the water, given the debris came from the water crash site. This is expressed with the operator $\mathtt{T}$: $$\mathtt{T}(d_j,p_n)=p_n'$$
 
 Repeated application of $\mathtt{T}$ over each cell $d_j$ will create the new positional distribution informed by debris, $p_w$. This is created by: $$p_w=\mathtt{T}(d_1, \mathtt{T}(d_2, \ldots \mathtt{T}(d_j, p_n)\ldots))$$
+
+$\mathtt{T}$ can be defined using Bayes' law, though it is computationally expensive to do so. Bayes' law relates the probability that the plane crashed in cell $j_1$ to the presence of the debris in cell $j_2$. Computing the $j_1$ probability for each cell allows the distribution to be modified. However, existing current models suggest that specific models will be able to do this in a more computationally-reasonable way.
 
 \section{Underwater Plane Body Search}
 
@@ -299,8 +300,8 @@ The reason this holds some significance is that one might expect the distance tr
 The computation time is visibly linear with respect to search iterations and ship count. While time is included in milliseconds, and individual milliseconds are not reproducible, the rate of growth is constant. 
 
 \begin{figure}[H]\begin{center}
-\includegraphics[scale=0.7]{../Matlab/Images/CompTimeByItersShips.png}
-\caption{Shows computation time as linear with respect to iteration count.}
+\includegraphics[scale=0.6]{../Matlab/Images/CompTimeByItersShips.png}
+\caption{Computation time as linear with respect to iteration count.}
 \end{center}\end{figure}
 
 This implies that the model operates in $O(n*i)$, where $n$ is the number of vessels and $i$ is the number of iterations.
@@ -349,7 +350,7 @@ Finally, additional probability distributions would need to be studied in order 
 \begin{thebibliography}{10}
 \bibitem{TF} T. Furukawa, F. Bourgault, B. Lavis, H.F. Durrant-Whyte, \emph{``Recursive Bayesian Search-and-Tracking Using Coordinated UAVs for Lost Targets"}, IEEE International Conference on Robotics and Automation, 2006. 
 
-\bibitem{JA} \emph{``Search for MH370 Facts and statistics Surface search of the southern Indian Ocean 17 March–28 April 2014"}, Joint Agency Coordination Centre, http://www.jacc.gov.au/search/files/MH370_Facts_and_statistics-Surface_search_of_the_southern_Indian_Ocean, PDF.
+\bibitem{JA} \emph{``Search for MH370 Facts and statistics Surface search of the southern Indian Ocean 17 March–28 April 2014''}, Joint Agency Coordination Centre, \\http://www.jacc.gov.au/search/files/MH370\_Facts\_and\_statistics-Surface\_search\_of\_the\\\_southern\_Indian\_Ocean, PDF.
 
 \bibitem{LL} L.C.M. Lebreton, S.D. Greer, J.C. Borrero, \emph{``Numerical modeling of floating debris in the world’s oceans"}, Marine Pollution Bulletin, Volume 64, Issue 3, March 2012, Pages 653-661, ISSN 0025-326X, http://dx.doi.org/10.1016/j.marpolbul.2011.10.027.
 
