@@ -12,7 +12,7 @@ While many of these assumptions can be removed from the model, the actual proces
 \item When computing distances, the curvature of the Earth is ignored; each cell size is considered small enough to approximate Euclidean distance. This is done to simplify the consideration of a two-dimensional grid; extension is fully possible through the inclusion of a concrete distance.  
 \item It is assumed that the time between issuing a search instruction and the time until that search begins is approximated by the distance the vessel has to move. This assumption is only partially extensible; inclusion of time into the model requires reworking the $\gamma$ function to vary with both distance and time.
 \item All cells are of equal size. This is relatively extensible. In order to adjust for this, however, one would need to adjust the probability of success, the cost of searching, and the probability of the object being in the cell according to the area of the cell. This is not a simple process, and it is not included here.
-\item The success of a vehicle searching a space can be measured directly as a probability of success, regardless of surroundings and extenuating conditions. This assumption also implies that either the sea floor is of uniform depth and topography, or that the depth and topography of the sea floor is not relevant to plane discovery. While this is likely a weak assumption, this \textit{it} extensible simply by making the $\beta_t(j,k)$ function vary with cell $j$ as a function of sea floor depth.
+\item The success of a vehicle searching a space can be measured directly as a probability of success, regardless of surroundings and extenuating conditions. This assumption also implies that either the sea floor is of uniform depth and topography, or that the depth and topography of the sea floor is not relevant to plane discovery. While this is likely a weak assumption, this \textit{is} extensible simply by making the $\beta_t(j,k)$ function vary with cell $j$ as a function of sea floor depth.
 \end{itemize}
 
 \subsection{Aerial Search Assumptions}
@@ -26,7 +26,7 @@ While many of these assumptions can be removed from the model, the actual proces
 
 \begin{itemize}
 \item Unlimited iterations of searching are allowed. While it would be possible to allow for finite searching without changing the algorithm, the search algorithm, as-is, would no longer be optimal. 
-After all available effort has been allocated, the algorithm would need to provide a best-guess answer. Hence, a constraint on effort allocation places an additional constraint on optimization.  This modification constitutes a significant mathematical change.
+After all available effort has been allocated, the algorithm would need to provide a best-guess answer. Hence, a constraint on effort allocation places an additional constraint on optimization. This modification constitutes a significant mathematical change.
 \item A current model exists that can predict an initial probability distribution of the position of the plane body on the sea floor. This probability distribution will be later informed by discovered debris.
 \item The plane does not drift once it makes contact with the sea floor.   
 \end{itemize}

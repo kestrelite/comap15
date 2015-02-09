@@ -154,6 +154,8 @@ In order to fully observe the dynamics of the search, all cell searches are assu
 
 The probability distribution used for input was intentionally designed to have several local maxima at varying heights. The probability distribution used is also continuous everywhere, though is not continuous past the first search iteration. The surface used is represented by $$|\mbox{peaks(70)}|\div \sum_j |\text{peaks(70)}|$$
 
+where \texttt{peaks} is the MatLab ``peaks'' function.
+
 \begin{figure}[H]\begin{center}
 \includegraphics[scale=0.5]{../Matlab/Images/InitialProbDist.png}
 \includegraphics[scale=0.5]{../Matlab/Images/InitialProbDistSurf.png}
@@ -180,7 +182,7 @@ The technology is considered to be functionally uniform. As is noted in section 
 \begin{figure}[H]\begin{center}
 \includegraphics[scale=0.5]{../Matlab/Images/After100SearchCount.png}
 \includegraphics[scale=0.5]{../Matlab/Images/After100SearchEffectiveness.png}
-\caption{Search count and $\beta$ values after 100 iterations with 15 ships.}
+\caption{Search count map (left) and $\beta$ values map (right) after 100 iterations with 15 ships. Note that $\beta$ values decrease where searches have already happened.}
 \end{center}\end{figure}
 
 \subsection{Cost function analysis}
@@ -250,7 +252,7 @@ Combined, these two form the primary distribution indicating the success of the 
 
 \begin{figure}[H]\begin{center}
 \includegraphics[scale=0.75]{../Matlab/Images/PctSuccessByItersShips.png}
-\caption{Histogram of the probability of success. Vertical noise is partially a result of interpolation and partially a result of $\alpha$ distributions.}
+\caption{Histogram of the probability of success. Vertical noise is a result of interpolation.}
 \end{center}\end{figure}
 
 This histogram suggests that the contour lines of the probability success graph are of the form $\frac 1x$. Additionally, this map shows that the net probability is likely of the form $\log(n*i)$, where $n$ is the number of ships used and $i$ is the number of iterations performed (as in Figure 1).
@@ -271,7 +273,67 @@ The following comparisons were extracted from the Monte Carlo simulation:
 \caption{Blue lines are linear fits; Search count linear fit: $7.4547x-26.2551$; ship count linear fit: $223.9765x-88.9555$.}
 \end{center}\end{figure}
 
-[current progress ends here]
+This suggests that the distance traveled (and, in theory, at least part of the cost of searching) increases linearly with both distance and search count. 
+
+The reason this holds some significance is that one might expect the distance traveled to grow over time, since the nearby probabilities are diminished, but in reality, this is not the case.
+
+\subsection{Sensitivity of Computation Time}
+
+\begin{figure}[H]\begin{center}
+\includegraphics[scale=0.48]{../Matlab/Images/CompTimevsSearchIterations.png}
+\includegraphics[scale=0.48]{../Matlab/Images/CompTimevsShipCount.png}
+\caption{Showing the computation time is linear in both search iterations and ship count}
+\end{center}\end{figure}
+
+The computation time is visibly linear with respect to search iterations and ship count. While time is included in milliseconds, and individual milliseconds are not reproducible, the rate of growth is constant. 
+
+\begin{figure}[H]\begin{center}
+\includegraphics[scale=0.7]{../Matlab/Images/CompTimeByItersShips.png}
+\caption{Shows computation time as linear with respect to iteration count.}
+\end{center}\end{figure}
+
+This implies that the model operates in $O(n*i)$, where $n$ is the number of vessels and $i$ is the number of iterations.
+
+\subsection{Anomalous behavior of $\alpha$ values}
+
+The sensitivity of $\alpha$ has been deferred to this section because its behavior is highly anomalous in comparison to the other model behaviors. A summary of the results of $\alpha$ are included here. Specific dynamics of $\alpha$ are not investigated in this paper.
+
+The first dynamic to highlight is the odd independence of $\alpha$ on $PD$, shown in figure 14. The distribution of $PD$ over $\alpha$ appears to be relatively uniform; however, there is visibly higher density toward the bottom left and upper right. Additionally, there is an odd behavior pattern wherein the success rate seems to fall off once $\alpha$ grows sufficiently large. 
+
+\begin{figure}[H]\begin{center}
+\includegraphics[scale=0.3]{../Matlab/Images/PctSuccessByAlpha.png}
+\caption{Distribution of $\alpha$ versus the percent success rate}
+\end{center}\end{figure}
+
+In order to investigate this behavior further, a moving average was taken of $\alpha$ verses $PD$:
+
+\begin{figure}[H]\begin{center}
+\includegraphics[scale=.5]{../Matlab/Images/MovAvgAlphaPctSuccess.png}
+\caption{A moving average of $\alpha$ versus the percent rate with smoothing 100 (over 15000 data points).}
+\end{center}\end{figure}
+
+This seems to indicate that, for an $\alpha$ around 0.28, the search success does not suffer, but it seems to begin to suffer slightly past another $\alpha$ around 0.43. However, this is a purely qualitative assessment, and does not represent any statistical measurement.
+
+Nevertheless, $\alpha$ is sufficiently linear over the operating range of values that the dynamics of this value may not impact the model in operation; it is strictly a mathematical exercise.
+
+\section{Future studies}
+
+There are several areas of future study. The first is, of course, $\alpha$ dynamics. It is necessary to understand how the $\alpha$ value impacts the model. For now, however, it is sufficient to assume that the $\alpha$ value does not have a considerable impact on the net search outcome. 
+
+Additionally, there is one chart which has a yet-unexplained anomaly in figure 16:
+
+\begin{figure}[H]\begin{center}
+\includegraphics[scale=0.75]{../Matlab/Images/CompTimePctSuccess.png}
+\caption{Odd dynamics exhibited by computational time and percent success}
+\end{center}\end{figure}
+
+The computational time follows a strongly logarithmic plot in the normal case, but there are two locations where this does not hold. The first set of points appears above the obvious logarithmic boundary (which is not currently characterized). These points may very well be computational anomalies, but it is worth investigating to see whether they are truly anomalous or if they are indicative of a better-than-average case. There is a chance - albeit a small one - that they \textit{do} represent a better-than-average case that can be characterized. 
+
+Additionally, a second unexplained behavior occurs around 3000 msec. The underside of the graph begins to expand outward - but it suddenly converges again in with the main path around 3000 msec. The cause of this is unknown, and this behavior is as yet uncharacterized. 
+
+\section{Conclusions}
+
+
 
 \pagebreak
 
