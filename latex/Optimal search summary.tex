@@ -48,15 +48,17 @@ A model for optimal discrete-effort search for a plane lost in open ocean is pre
 
 The expansion of air travel will lead to the occasional and inevitable ocean plane crash. In order to maximize the chance of successful recovery, it is important to have a working model on-hand for how to best execute such a search. 
 
-This paper contains a discussion of an optimal search for a missing object based on a probabalistic distribution. It has been generalized to the point where any available search technology may be included, and any type of craft may be sought.
+This paper contains a discussion of an optimal search for a missing object based on a probabilistic distribution. It has been generalized to the point where any available search technology may be included, and any type of aircraft may be sought.
 
 However, specific technologies are not modeled in this paper. It is assumed that, through other research and testing, relatively accurate models for the detection rate of the search technologies used have been acquired. Additionally, it is presupposed that a model exists for current that will allow for both backward and forward tracking. Existing research suggests such a model exists.
 
-As a result, three abstractions have been achieved. First, an abstraction with respect to the physical search space: the current model(s) return a probability distribution for debris across the surface of the water and for the position of the craft on the sea floor. 
+As a result, three abstractions have been achieved. First, an abstraction with respect to the physical search space: the current model(s) return a probability distribution for debris across the surface of the water and for the position of the aircraft on the seafloor. 
 
-Secondly, there is an abstraction with respect to the search technology used: the detection rate of this technology in locating an object is given by research using that specific technology. Specific search technologies are not included in this paper for two reasons: the state of the art advances quickly, and rigorous testing with equipment is needed to determine these values. 
+Secondly, there is an abstraction with respect to the search technology used: the detection rate of this technology in locating an object is given by previous research. Specific search technologies are not included in this paper for two reasons: the state of the art advances quickly, and rigorous testing with equipment is needed to determine these values. 
 
 Thirdly, there is an abstraction with respect to the type of fallen plane. This is done in the same way as the abstraction with respect to search technology. This abstraction is, in this context, the percent chance that a search technology will detect a particular object. The chance will change with both the object type and the search technology used.
+
+\input{NSS_ScratchWork.tex}
 
 \section{General Discrete-effort Optimal Searching}
 
