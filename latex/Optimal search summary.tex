@@ -2,9 +2,9 @@
 \usepackage[english]{babel}
 %\usepackage[utf8x]{inputenc}
 \usepackage{amsmath}
-\usepackage{amssymb}
-\usepackage{graphicx}
+\usepackage{amssymb}\usepackage{graphicx}
 \usepackage{multicol}
+\usepackage{float}
 \usepackage{textcomp}
 \usepackage{gensymb}
 \usepackage{listings}
@@ -106,6 +106,8 @@ Each device is allocated sequentially to a square that is a) not already being s
 
 Whenever a device finishes searching, the probability distribution of the object's position is recomputed according to the above transformation, the device's $\epsilon$ value is recomputed based on the new distribution, and it is assigned to a new cell.
 
+The net success is the cumulative product of $p_t(j)*\beta_t(j,k)$. Suppose $f_t(j)$ is the total number of searches allocated to cell $j$. Then, the net probability that the plane has been discovered by a single technology can thus be expressed as: $$\sum p_t(j)\beta_t(j,f_t(j))$$
+
 \input{assumptions_file.tex}
 
 \section{Current Flow Modeling and Aerial Search}
@@ -129,15 +131,51 @@ The second step in the model is performing the underwater search.
 
 Autonomous underwater vehicles will follow the general search method previously stated in section 3.5. The cost function $\gamma_t(j,k)$ is slightly altered. A distance cost is added: $\gamma_t(j,k)=d$, where $d$ is the distance that would be traversed by each vessel in moving from its current location to a new target cell $k$. This cost function seeks to minimize $d$ as to overall maximize the probability of successfully locating the vessel. Analysis of the effectiveness of this function is presented in the next section.
 
+\section{Model Analysis}
 
+A Monte Carlo simulation was run over 15,000 iterations on three parameters of the model, and three inputs were gathered, as listed in figure 1. It was additionally assumed that only one technology is used for the duration of the search. Extension into multiple technologies is fully possible, but was not done during this Monte Carlo simulation in order to isolate the general search dynamics.
 
-\input{analysis_file.tex}
+\begin{figure}[H]\begin{center}\begin{tabular}{|c|c|c|c|}
+\hline \textbf{Parameter} & \textbf{Description} & \textbf{Minimum} & \textbf{Maximum}\\\hline\hline
+$\alpha$ & Probability of success of one search & 0.2 & 0.5 \\\hline
+$i$ & Number of search iterations performed & 10 & 750 \\\hline
+$n$ & Number of ships used in search & 1 & 30 \\\hline\hline
+\textbf{Output} & \textbf{Description} &&\\\hline
+$DT$ & Total distance traveled by all ships &&\\\hline
+$PS$ & Probability that the search has discovered the object &&\\\hline
+$NS$ & Total number of searched cells &&\\\hline
+$CT$ & Computation time for model (in ms) &&\\\hline
+\end{tabular}\end{center}
+\caption{Table of parameters and collected outputs.}
+\end{figure}
+
+In order to fully observe the dynamics of the search, all cell searches are assumed to have failed. This is simply a consequence of the fact that if the search had succeeded, it would have stopped. The goal is to observe dynamics.
+
+The probability distribution used for input was intentionally designed to have several local maxima at varying heights. The probability distribution used is also continuous everywhere, though is not continuous past the first search iteration. The surface used is represented by $$|\mbox{peaks(70)}|\div \sum_j |\text{peaks(70)}|$$
+
+\begin{figure}[H]\begin{center}
+\includegraphics[scale=0.5]{../Matlab/Images/InitialProbDist.png}
+\includegraphics[scale=0.5]{../Matlab/Images/InitialProbDistSurf.png}
+\caption{Probability distribution used in Monte Carlo simulation}
+\end{center}\end{figure}
+
+It is worth noting that a grid resolution of 70 was chosen. As computation time increases with the square of grid size, a sufficiently low value was chosen for computation which simultaneously allowed for sufficiently high resolution. 
+
+Additionally, the model is invariant under cell size. Each search iteration is not represented in the time used to search a cell, so the total work done in searching a cell is ``one unit.'' The conversion from the single unit work to time changes based on cell size, but is not modeled.
+
+Initial allocation was then performed on the ships in this distribution. This placed the $n$ ships in the grid according to the highest $\epsilon$ values. The probability distribution is then evolved assuming failure of search.
+
+\begin{figure}[H]\begin{center}
+\includegraphics[scale=0.35]{../Matlab/Images/ModelSearch001.png}
+\includegraphics[scale=0.35]{../Matlab/Images/ModelSearch020.png}
+\includegraphics[scale=0.35]{../Matlab/Images/ModelSearch100.png}
+\end{center}\end{figure}
 
 \pagebreak
 
 \begin{thebibliography}{10}
 \bibitem{TF} Furukawa, T., Bourgault, F., Lavis, B., Durrant-Whyte F., H., \emph{``Recursive Bayesian Search-and-Tracking Using Coordinated UAVs for Lost Targets"}, IEEE International Conference on Robotics and Automation, 2006. 
-\bibitem{LL} L.C.M. Lebreton, S.D. Greer, J.C. Borrero, \emph{``Numerical modelling of floating debris in the world’s oceans"}, Marine Pollution Bulletin, Volume 64, Issue 3, March 2012, Pages 653-661, ISSN 0025-326X, http://dx.doi.org/10.1016/j.marpolbul.2011.10.027.
+\bibitem{LL} L.C.M. Lebreton, S.D. Greer, J.C. Borrero, \emph{``Numerical modeling of floating debris in the world’s oceans"}, Marine Pollution Bulletin, Volume 64, Issue 3, March 2012, Pages 653-661, ISSN 0025-326X, http://dx.doi.org/10.1016/j.marpolbul.2011.10.027.
 \bibitem{Mackay98} Mackay, D.J.C, \emph{``Introduction to Monte Carlo Methods"}, submitted for publication.
 \bibitem{HR} Henry R. Richardson and Lawrence D. Stone, \emph{``Operations analysis during the underwater search for Scorpion"}, submitted for publication. 
 \bibitem{Stone75} Stone, Lawrence D., \textit{Theory of Optimal Search}, New York: Academic Press, 1975.
