@@ -2,29 +2,31 @@
 
 Assumptions may be broken into three categories: general assumptions, assumptions used for the aerial search, and assumptions used for the underwater search. A note that an assumption ``is extensible'' is used to indicate that the removal of the assumption from the model does not significantly complicate the mathematics used.
 
+While many of these assumptions can be removed from the model, the actual process for doing so is typically not included in this paper; however, an overview is given for all extensible assumptions.
+
 \subsection{General Assumptions}
 
 \begin{itemize}
-\item A known search space already exists between departure point and destination point
-\item Only one search occurs in a cell at a given time. This assumption is extensible.
-\item When computing distances, each cell size is small enough to approximate Euclidean distance.
-\item Search success can be measured directly as a probability of success, regardless of surroundings and extenuating conditions.
-\item It is assumed that the time between issuing a search instruction and the time until that search begins is approximated by the distance the vessel has to move.
-\item Cells are of equal size. This is relatively extensible, given that the model accounts for generalized success rates; however, it is not included here.
+\item A known search space already exists between departure point and destination point.
+\item Only one search occurs in a cell at a time; only one vessel occupies a cell at a given time. This assumption is extensible by programmatically allowing multiple vessels to be in a given cell. However, the process for computing the probability of success is complicated by this extension, and is excluded from this paper.
+\item When computing distances, the curvature of the Earth is ignored; each cell size is considered small enough to approximate Euclidean distance. This is done to simplify the consideration of a two-dimensional grid; extension is fully possible through the inclusion of a concrete distance.
+\item The success of a craft searching a space can be measured directly as a probability of success, regardless of surroundings and extenuating conditions. This assumption also implies that either the sea floor is of uniform depth, or that the depth of the sea floor is not relevant to plane discovery. This is, however, extensible simply by making the $\beta_t(j,k)$ function vary with $j$ as a function of sea floor depth.
+\item It is assumed that the time between issuing a search instruction and the time until that search begins is approximated by the distance the vessel has to move. This assumption is only partially extensible; inclusion of time into the model requires reworking the $\gamma$ function to vary with both distance and time.
+\item All cells are of equal size. This is relatively extensible. In order to adjust for this, however, one would need to adjust the probability of success, the cost of searching, and the probability of the object being in the cell according to the area of the cell. This is not a simple process, and it is not included here.
 \end{itemize}
 
 \subsection{Aerial Search Assumptions}
 
 \begin{itemize}
-\item An accurate model regarding ocean currents' ability to shift objects exists that is suitable for use in conjunction with this model. Such a current model would need to be able to advance forward in continuous-time or small discrete-time steps, as the probability distribution of debris will change vastly both over time and number of searches. Previous research suggests such a model exists.
-\item Debris is either present or not present. Various types of debris and their individual implications are not considered. This assumption is extensible, though it would require significant modification to do so.
+\item An accurate model regarding ocean currents' ability to shift objects exists that is suitable for use in conjunction with this model. Such a current model needs to advance in either continuous-time or small discrete-time steps, as the probability distribution of debris will change vastly both over time and number of searches. Previous research suggests such a model exists. 
+\item Debris is either present or not present. Various types of debris and their individual implications are not considered. 
 \end{itemize}
 
 \subsection{Underwater Search Assumptions}
 
 \begin{itemize}
-\item Unlimited time is allowed for the underwater search. If limited time is allotted for an underwater search, then this would change the search regime slightly. This modification is not included in this paper, and constitutes a noticeable mathematical change.
-\item A current model exists that can predict by probability distribution the position of the plane body on the sea floor.
-\item While the plane may drift from the time of impact to when it hits the sea floor, once the plane is in contact with the sea floor, it does not move. 
+\item Unlimited iterations of searching are allowed. While it would be possible to allow for finite searching without changing the algorithm, the search algorithm as-is would no longer be optimal. A constraint on allocation of effort places an additional constraint on optimization, as, after all available effort has been allocated, the algorithm would need to provide a best-guess answer. This modification constitutes a significant mathematical change.
+\item A current model exists that can predict an initial probability distribution of the position of the plane body on the sea floor. This probability distribution will be later informed by discovered debris.
+\item The plane does not drift once it makes contact with the sea floor.  
 \item Ocean floor depth is not relevant to the detection of the craft. While this is likely a weak assumption, it \textit{is} extensible. Based on the technical specifications of a given craft, a probability of success could be defined for a specific technology based on various impacting factors. For instance, $\beta_t(j,k)$ could be defined as a function of average floor depth at cell $j$.
 \end{itemize}
