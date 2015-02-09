@@ -1,3 +1,4 @@
 LogShipCtPctSuccess -0.0142+0.3433*log10(x)
 LogSrchCtPctSuccess -0.4809+0.3304*log10(x)
 DistTraveledShipCount 223.9765x-88.9555
+DistTraveledIterCount 7.4547x-26.2551
