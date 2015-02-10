@@ -1,8 +1,9 @@
 \documentclass[a4paper]{article}
 \usepackage[english]{babel}
-%\usepackage[utf8x]{inputenc}
+%\usepackage[utf8x]{article}
 \usepackage{amsmath}
-\usepackage{amssymb}\usepackage{graphicx}
+\usepackage{amssymb}
+\usepackage{graphicx}
 \usepackage{multicol}
 \usepackage{float}
 \usepackage{textcomp}
@@ -21,8 +22,11 @@
 \newcommand*{\Scale}[2][4]{\scalebox{#1}{$#2$}}
 \pagestyle{fancy}
 \fancyhf{}
-\lhead{Team 40670}
-\rhead{Page \thepage\, of \pageref{LastPage}}
+\lhead{Team \# 40760}
+\rhead{Page \thepage\, of 15}
+\cfoot{}
+
+%\pagenumbering{gobble}
 
 \definecolor{dkgreen}{rgb}{0,0.6,0}
 \definecolor{gray}{rgb}{0.5,0.5,0.5}
@@ -37,6 +41,7 @@
 %\setlength{\parskip}{5pt}
 %\renewcommand{\theenumi}{\Alph{enumi}}
 \begin{document}\maketitle
+\thispagestyle{fancy}
 
 \begin{abstract}
 A model for optimal discrete-effort search for a plane lost in open ocean is presented. A pre-existing ocean current model is assumed to generate probability distributions for both debris and the plane body in the search area. The search region is split into smaller cells. An aerial search for debris is then executed. The probability distribution for the location of the plane body on the seafloor is then modified by the ocean current model using a statistical transformation on the data. Searches underwater are then optimized with respect to chance of discovery and search cost. Two search cost functions are compared. Both searches are generalized with respect to the search technology used. A measure of the efficiency of search technologies is referenced and assumed to be given by other research. In this way, the model is generalized so that any search technology may be used. Results of test runs demonstrate a logarithmic relationship between percent success, quantity of search vehicles, and quantity of searches. The computational cost of the model is estimated at $O(n)$ with respect to both quantity of search iterations and quantity of search vehicles. Additionally, a comparison is made between a simulation that optimizes cost as a function of distance and one that does not optimize cost. This comparison reveals that optimizing the travel distance may reduce total distance traveled by up to a factor of 38 while only marginally sacrificing total search effectiveness.
@@ -60,7 +65,7 @@ Thirdly, there is an abstraction with respect to the type of fallen plane. This 
 
 \section{General Discrete-effort Optimal Searching}
 
-A modified discrete-effort method derived from L.D. Stone's \textit{Theory of Optimal Search} is used in both searches to prioritize and distribute search efforts. An overview of this method is provided here. 
+A modified discrete-effort method derived from L.D. Stone's \textit{Theory of Optimal Search} is used in both searches to prioritize and distribute search efforts. An overview of this method is provided here. A table of values is provided in Appendix A at the end of the document. 
 
 \subsection{Defining the Terms Used in Searching}
 
@@ -315,7 +320,7 @@ The sensitivity of $\alpha$ has been deferred to this section because its behavi
 The first dynamic to highlight is the odd independence of $\alpha$ on $PD$, shown in Figure 14. The distribution of $PD$ over $\alpha$ appears to be relatively uniform; however, there is visibly higher density toward the bottom left and upper right. Additionally, there is an odd behavior pattern wherein the success rate seems to fall off once $\alpha$ grows sufficiently large. 
 
 \begin{figure}[H]\begin{center}
-\includegraphics[scale=0.3]{../Matlab/Images/PctSuccessByAlpha.png}
+\includegraphics[scale=0.5]{../Matlab/Images/PctSuccessByAlpha.png}
 \caption{Distribution of $\alpha$ ($x$-axis) versus the percent success rate ($y$-axis)}
 \end{center}\end{figure}
 
@@ -366,5 +371,6 @@ Finally, additional probability distributions would need to be studied in order 
 
 \bibitem{LS} Lawrence D. Stone, Colleen M. Keller, Thomas M. Kratzke, Johan P. Strumpfer, \emph{``Search for the Wreckage of Air France Flight AF 447"}, Statistical Science 2014, Vol. 29, No. 1, 2014.
 \end{thebibliography}
+
 
 \end{document}
